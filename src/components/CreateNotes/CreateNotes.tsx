@@ -1,8 +1,9 @@
 import React from "react";
+import scss from "./createNotes.module.scss"
 
 const CreateNotes = () => {
     return (
-        <section>
+        <section className={scss['create-notes']}>
             <textarea
                 name=""
                 id=""

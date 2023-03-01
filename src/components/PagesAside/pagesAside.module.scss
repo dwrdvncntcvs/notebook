@@ -1,0 +1,49 @@
+@import "../../variables.scss";
+
+ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 5px;
+
+    li {
+      list-style-type: none;
+      align-self: flex-start;
+      width: 100%;
+
+      button {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px 0px 0px 10px;
+        border: 2px solid $grid-border-color;
+        background-color: white;
+        border-right: 0;
+      }
+
+      .active {
+        background-color: $grid-border-color;
+      }
+    }
+  }
+
+  .aside-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 10px;
+
+    button {
+      padding: 5px 10px;
+      border-radius: 10px;
+      border: 2px solid $primary-green;
+      color: $primary-green;
+      transition: all ease 0.2s;
+      background-color: white;
+      font-weight: bold;
+
+      &:hover {
+        background-color: $primary-green;
+        color: white;
+      }
+    }
+  }

@@ -1,0 +1,43 @@
+@import "../../variables.scss";
+
+.create-notes {
+    textarea {
+        width: 90%;
+        height: 100%;
+        border: 2px solid $grid-border-color;
+        resize: none;
+        border-radius: 10px;
+        padding: 10px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    button {
+        flex: 1;
+        height: 50px;
+        border-radius: 10px;
+        border: 2px solid $primary-green;
+        color: $primary-green;
+        transition: all ease 0.2s;
+        background-color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: all ease 0.2s;
+        font-size: 1rem;
+        letter-spacing: 2px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            height: 1.25rem;
+        }
+
+        &:hover {
+            background-color: $primary-green;
+            color: white;
+        }
+    }
+}

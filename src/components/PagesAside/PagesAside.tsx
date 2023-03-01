@@ -1,15 +1,16 @@
 import React from "react";
+import scss from "./pagesAside.module.scss";
 
 const PagesAside = () => {
     return (
         <aside>
-            <div className="aside-header">
+            <div className={scss["aside-header"]}>
                 <h2>Pages</h2>
-                <button id="add-page">+ Page</button>
+                <button id={scss["add-page"]}>+ Page</button>
             </div>
             <ul>
                 <li>
-                    <button className="active">Page 1</button>
+                    <button className={scss.active}>Page 1</button>
                 </li>
                 <li>
                     <button>Page 1</button>

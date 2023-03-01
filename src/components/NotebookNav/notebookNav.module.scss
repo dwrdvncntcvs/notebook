@@ -1,0 +1,47 @@
+@import "../../variables.scss";
+
+nav {
+    #float-btn {
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        right: 40px;
+        width: 60px;
+        height: 60px;
+        border: 2px solid $primary-green;
+        color: $primary-green;
+        border-radius: 100%;
+        font-size: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all ease 0.2s;
+
+        &:hover {
+            background-color: $primary-green;
+            color: white;
+        }
+    }
+
+    .notebook-btn {
+        padding: 5px 30px;
+        font-size: 1rem;
+        transform: translateY(2px) translateX(20px);
+        border: 2px solid lightgray;
+        border-bottom: 2px solid white;
+        background-color: white;
+        border-radius: 10px 10px 0px 0px;
+        border: none;
+        border-bottom: 2px solid lightgray;
+    }
+
+    .active {
+        padding: 5px 20px;
+        font-size: 1.2rem;
+        transform: translateY(2px) translateX(20px);
+        border: 2px solid lightgray;
+        border-bottom: 2px solid white;
+        background-color: white;
+        border-radius: 10px 10px 0px 0px;
+    }
+}
