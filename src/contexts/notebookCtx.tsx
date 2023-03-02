@@ -12,10 +12,12 @@ import NotebookService from "../services/notebook";
 
 interface NotebookData {
     notebooks: Notebook[];
+    createNotebook: (notebook: Notebook) => void;
 }
 
 const notebookData: NotebookData = {
     notebooks: [],
+    createNotebook(notebook: Notebook) {},
 };
 
 const NotebookContext = createContext<NotebookData>(notebookData);
@@ -25,16 +27,21 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
     const notebookService = new NotebookService();
 
     const getAllNotebooks = useCallback(() => {
-        return notebookService.getAll();
+        const notebooks = notebookService.getAll();
+        setNotebooks(notebooks);
     }, []);
 
     useEffect(() => {
-        const notebooks = getAllNotebooks();
-        setNotebooks(notebooks);
+        getAllNotebooks();
     }, [getAllNotebooks]);
 
+    const createNotebook = (notebook: Notebook) => {
+        notebookService.create(notebook);
+        getAllNotebooks();
+    };
+
     return (
-        <NotebookContext.Provider value={{ notebooks }}>
+        <NotebookContext.Provider value={{ notebooks, createNotebook }}>
             {children}
         </NotebookContext.Provider>
     );

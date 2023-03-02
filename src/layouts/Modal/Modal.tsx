@@ -1,5 +1,6 @@
 import React, { FC, ReactNode, useEffect } from "react";
 import DOMPortal from "../../components/helpers/DOMPortal/DOMPortal";
+import { ModalProvider } from "../../contexts/modalCtx";
 import Backdrop from "../Backdrop/Backdrop";
 import scss from "./modal.module.scss";
 

@@ -1,5 +1,8 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState, ChangeEvent } from "react";
+import { useModalContext } from "../../contexts/modalCtx";
+import { useNotebookContext } from "../../contexts/notebookCtx";
 import Modal from "../../layouts/Modal/Modal";
+import { Notebook } from "../../models/Notebook";
 import scss from "./createModal.module.scss";
 
 const Header = () => {
@@ -11,13 +14,30 @@ const Header = () => {
 };
 
 const Body = () => {
+    const [notebookName, setNotebookName] = useState("");
+    const { createNotebook } = useNotebookContext();
+    const { closeModal } = useModalContext()!;
+
     const submitHandler = (e: FormEvent) => {
         e.preventDefault();
+        const notebook = new Notebook(notebookName);
+        createNotebook(notebook);
+        setNotebookName("");
+        closeModal();
+    };
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setNotebookName(e.target.value);
     };
 
     return (
         <form className={scss.form} onSubmit={submitHandler}>
-            <input type="text" placeholder="Enter Notebook name..." />
+            <input
+                type="text"
+                placeholder="Enter Notebook name..."
+                onChange={handleChange}
+                value={notebookName}
+            />
             <button type="submit">Create Notebook</button>
         </form>
     );
