@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import CreateNotes from "./components/CreateNotes/CreateNotes";
 import Header from "./components/Header/Header";
@@ -35,6 +36,7 @@ function App() {
             <PagesAside />
             <Notes />
             <CreateNotes />
+            <ToastContainer autoClose={2000} position="bottom-right" />
         </div>
     );
 }

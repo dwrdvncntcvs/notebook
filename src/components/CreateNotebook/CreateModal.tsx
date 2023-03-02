@@ -1,4 +1,5 @@
 import React, { FormEvent, useState, ChangeEvent } from "react";
+import { toast } from "react-toastify";
 import { useModalContext } from "../../contexts/modalCtx";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import Modal from "../../layouts/Modal/Modal";
@@ -20,6 +21,11 @@ const Body = () => {
 
     const submitHandler = (e: FormEvent) => {
         e.preventDefault();
+        if (!notebookName) {
+            toast.error("Can't create a notebook with empty name");
+            return;
+        }
+
         const notebook = new Notebook(notebookName);
         createNotebook(notebook);
         setNotebookName("");
