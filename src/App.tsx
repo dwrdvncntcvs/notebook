@@ -6,6 +6,7 @@ import Header from "./components/Header/Header";
 import NotebookNav from "./components/NotebookNav/NotebookNav";
 import Notes from "./components/Notes/Notes";
 import PagesAside from "./components/PagesAside/PagesAside";
+import Modal from "./layouts/Modal/Modal";
 
 function App() {
     return (

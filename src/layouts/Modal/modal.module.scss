@@ -1,0 +1,16 @@
+@import "../../variables.scss";
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+    background-color: white;
+    height: auto;
+    position: fixed;
+    padding: 20px;
+    z-index: 9999;
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
