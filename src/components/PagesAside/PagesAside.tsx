@@ -7,14 +7,10 @@ const PagesAside = () => {
             <div className={scss["aside-header"]}>
                 <button id={scss["add-page"]}>+ Page</button>
             </div>
-            <ul>
-                <li>
-                    <button className={scss.active}>Page 1</button>
-                </li>
-                <li>
-                    <button>Page 1</button>
-                </li>
-            </ul>
+            <div className={scss.pages}>
+                <button className={scss.active}>Page 1</button>
+                <button>Page 1</button>
+            </div>
         </aside>
     );
 };
