@@ -7,7 +7,7 @@ import CreateModal from "../CreateNotebook/CreateModal";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 
 const NotebookNav = () => {
-    const { state, openModal } = useModalContext()!;
+    const { name, openModal } = useModalContext()!;
     const { notebooks } = useNotebookContext();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,9 +25,13 @@ const NotebookNav = () => {
         setSearchParams({ notebookId: id });
     };
 
+    const openModalAction = () => {
+        openModal("createNotebook");
+    };
+
     return (
         <nav>
-            <button id={scss["float-btn"]} onClick={() => openModal()}>
+            <button id={scss["float-btn"]} onClick={openModalAction}>
                 <HiPlus />
             </button>
             {notebooks.map(({ id, name }) => (
@@ -43,7 +47,7 @@ const NotebookNav = () => {
                 </button>
             ))}
 
-            {state === "open" ? <CreateModal /> : null}
+            {name === "createNotebook" ? <CreateModal /> : null}
         </nav>
     );
 };

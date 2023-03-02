@@ -7,27 +7,27 @@ import {
 } from "react";
 
 interface ModalContextModel {
-    state: "open" | "closed";
-    openModal: () => void;
+    name: string;
+    openModal: (name: string) => void;
     closeModal: () => void;
 }
 
 const ModalContext = createContext<ModalContextModel | null>(null);
 
 const ModalProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [modalState, setModalState] = useState<"open" | "closed">("closed");
+    const [modalName, setModalName] = useState("");
 
-    function openModal() {
-        setModalState("open");
+    function openModal(name: string) {
+        setModalName(name);
     }
 
     function closeModal() {
-        setModalState("closed");
+        setModalName("");
     }
 
     return (
         <ModalContext.Provider
-            value={{ closeModal, openModal, state: modalState }}
+            value={{ closeModal, openModal, name: modalName }}
         >
             {children}
         </ModalContext.Provider>
