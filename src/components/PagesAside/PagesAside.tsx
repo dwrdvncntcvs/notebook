@@ -5,7 +5,6 @@ const PagesAside = () => {
     return (
         <aside>
             <div className={scss["aside-header"]}>
-                <h2>Pages</h2>
                 <button id={scss["add-page"]}>+ Page</button>
             </div>
             <ul>
