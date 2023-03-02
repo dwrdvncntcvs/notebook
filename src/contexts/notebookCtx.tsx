@@ -5,6 +5,7 @@ import {
     useContext,
     useState,
     useEffect,
+    useCallback,
 } from "react";
 import { Notebook } from "../models/Notebook";
 import NotebookService from "../services/notebook";
@@ -21,12 +22,16 @@ const NotebookContext = createContext<NotebookData>(notebookData);
 
 const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
     const [notebooks, setNotebooks] = useState<Notebook[]>([]);
+    const notebookService = new NotebookService();
+
+    const getAllNotebooks = useCallback(() => {
+        return notebookService.getAll();
+    }, []);
 
     useEffect(() => {
-        const notebookService = new NotebookService();
-        const notebooks = notebookService.getAll();
+        const notebooks = getAllNotebooks();
         setNotebooks(notebooks);
-    }, []);
+    }, [getAllNotebooks]);
 
     return (
         <NotebookContext.Provider value={{ notebooks }}>
