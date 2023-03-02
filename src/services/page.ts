@@ -6,6 +6,7 @@ interface PageDictionary {
 
 interface PageInterface {
     getAllNotebookPage: (notebookId: string) => Page[];
+    createPage: (page: Page) => void;
 }
 
 export default class PageService implements PageInterface {
@@ -17,5 +18,19 @@ export default class PageService implements PageInterface {
         const notebookPages = pages[notebookId];
 
         return notebookPages;
+    }
+
+    createPage(page: Page): void {
+        const pages = JSON.parse(
+            localStorage.getItem("pages")!
+        ) as PageDictionary;
+
+        if (!pages[page.notebookId]) {
+            pages[page.notebookId] = [];
+        }
+
+        pages[page.notebookId].push(page);
+
+        localStorage.setItem("pages", JSON.stringify(pages));
     }
 }
