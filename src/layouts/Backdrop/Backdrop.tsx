@@ -1,8 +1,11 @@
 import React from "react";
+import { useModalContext } from "../../contexts/modalCtx";
 import scss from "./backdrop.module.scss";
 
 const Backdrop = () => {
-    return <div className={scss.backdrop}></div>;
+    const { closeModal } = useModalContext()!;
+
+    return <div className={scss.backdrop} onClick={() => closeModal()}></div>;
 };
 
 export default Backdrop;
