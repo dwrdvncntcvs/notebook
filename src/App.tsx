@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
@@ -30,14 +31,16 @@ function App() {
     }, []);
 
     return (
-        <div className="main">
-            <Header />
-            <NotebookNav />
-            <PagesAside />
-            <Notes />
-            <CreateNotes />
-            <ToastContainer autoClose={2000} position="bottom-right" />
-        </div>
+        <BrowserRouter>
+            <div className="main">
+                <Header />
+                <NotebookNav />
+                <PagesAside />
+                <Notes />
+                <CreateNotes />
+                <ToastContainer autoClose={2000} position="bottom-right" />
+            </div>
+        </BrowserRouter>
     );
 }
 
