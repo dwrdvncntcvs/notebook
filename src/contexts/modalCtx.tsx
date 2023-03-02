@@ -40,6 +40,7 @@ const useModalContext = () => {
 
 const MODAL = {
     CREATE_NOTEBOOK: "createNotebook",
+    CREATE_PAGE: "createPage",
 };
 
 export { ModalContext, ModalProvider, useModalContext, MODAL };
