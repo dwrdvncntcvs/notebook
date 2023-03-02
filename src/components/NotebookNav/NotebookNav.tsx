@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useModalContext } from "../../contexts/modalCtx";
+import { MODAL, useModalContext } from "../../contexts/modalCtx";
 import scss from "./notebookNav.module.scss";
 import { HiPlus } from "react-icons/hi";
 import CreateModal from "../CreateNotebook/CreateModal";
@@ -26,7 +26,7 @@ const NotebookNav = () => {
     };
 
     const openModalAction = () => {
-        openModal("createNotebook");
+        openModal(MODAL.CREATE_NOTEBOOK);
     };
 
     return (
@@ -47,7 +47,7 @@ const NotebookNav = () => {
                 </button>
             ))}
 
-            {name === "createNotebook" ? <CreateModal /> : null}
+            {name === MODAL.CREATE_NOTEBOOK ? <CreateModal /> : null}
         </nav>
     );
 };

@@ -38,4 +38,8 @@ const useModalContext = () => {
     return useContext(ModalContext);
 };
 
-export { ModalContext, ModalProvider, useModalContext };
+const MODAL = {
+    CREATE_NOTEBOOK: "createNotebook",
+};
+
+export { ModalContext, ModalProvider, useModalContext, MODAL };
