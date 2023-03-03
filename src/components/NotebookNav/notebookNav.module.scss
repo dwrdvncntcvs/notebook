@@ -34,6 +34,7 @@ nav {
         border-radius: 10px 10px 0px 0px;
         border: none;
         border-bottom: 2px solid lightgray;
+        transition: all ease .05s;
     }
 
     .active {
@@ -44,5 +45,7 @@ nav {
         border-bottom: 2px solid white;
         background-color: white;
         border-radius: 10px 10px 0px 0px;
+        user-select: none;
+        pointer-events: none;
     }
 }
