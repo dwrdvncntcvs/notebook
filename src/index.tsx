@@ -4,14 +4,20 @@ import "./index.scss";
 import App from "./App";
 import { ModalProvider } from "./contexts/modalCtx";
 import { NotebookProvider } from "./contexts/notebookCtx";
+import { PageProvider } from "./contexts/pageCtx";
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
 );
 root.render(
-    <NotebookProvider>
-        <ModalProvider>
-            <App />
-        </ModalProvider>
-    </NotebookProvider>
+    <BrowserRouter>
+        <NotebookProvider>
+            <PageProvider>
+                <ModalProvider>
+                    <App />
+                </ModalProvider>
+            </PageProvider>
+        </NotebookProvider>
+    </BrowserRouter>
 );
