@@ -20,4 +20,18 @@ export class NoteService implements NoteInterface {
 
         return pageNotes;
     };
+
+    createNote = (note: Note) => {
+        const notes = JSON.parse(
+            localStorage.getItem(this.n)!
+        ) as NoteDictionary;
+
+        if (!notes[note.pageId]) {
+            notes[note.pageId] = [];
+        }
+
+        notes[note.pageId].push(note);
+
+        localStorage.setItem("notes", JSON.stringify(notes));
+    };
 }
