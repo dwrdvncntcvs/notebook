@@ -11,6 +11,7 @@
         padding: 10px;
         background-color: white;
         border: none;
+        transition: all ease 0.2s;
     }
 
     .active {
@@ -27,7 +28,7 @@
         gap: 3%;
         font-size: 1.5rem;
         font-weight: bold;
-        color: $primary-green;
+        color: gray;
     }
 }
 
