@@ -1,16 +1,24 @@
 import React from "react";
+import { useNoteContext } from "../../contexts/noteCtx";
+import { formatDate } from "../../utils/helper";
 import scss from "./notes.module.scss";
 
 const Notes = () => {
+    const { notes } = useNoteContext();
+
     return (
         <main className={scss.main}>
             <h2>Notes Title</h2>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
-                minus voluptas harum modi, omnis minima accusantium amet
-                excepturi quibusdam sint at aperiam. Totam itaque eum,
-                voluptatum reprehenderit est nemo incidunt.
-            </p>
+            {notes ? (
+                notes.map(({ createdAt, id, note }) => (
+                    <div key={id} className={scss.note}>
+                        <p>{note}</p>
+                        <p>{formatDate(createdAt)}</p>
+                    </div>
+                ))
+            ) : (
+                <div>No notes found</div>
+            )}
         </main>
     );
 };

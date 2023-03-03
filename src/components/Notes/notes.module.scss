@@ -2,14 +2,24 @@
     h2 {
         margin: 20px;
     }
-    
-    p {
+
+    .note {
         margin: 0;
         padding: 20px;
-    
+        display: flex;
+        flex-direction: column;
+
+        p {
+            margin: 0;
+        }
+
+        p:nth-child(2) {
+            font-size: 0.75rem;
+            align-self: flex-end;
+        }
+
         &:nth-child(even) {
             background-color: rgb(234, 234, 234);
         }
     }
-    
 }
