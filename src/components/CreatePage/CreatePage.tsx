@@ -1,6 +1,9 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
 import { toast } from "react-toastify";
+import { useModalContext } from "../../contexts/modalCtx";
+import { usePageContext } from "../../contexts/pageCtx";
 import Modal from "../../layouts/Modal/Modal";
+import { Page } from "../../models/Page";
 import scss from "./createPage.module.scss";
 
 const Header = () => {
@@ -13,6 +16,8 @@ const Header = () => {
 
 const Body = () => {
     const [pageName, setPageName] = useState("");
+    const { createNotebookPage, notebookId } = usePageContext();
+    const { closeModal } = useModalContext()!;
 
     const submitHandler = (e: FormEvent) => {
         e.preventDefault();
@@ -21,7 +26,11 @@ const Body = () => {
             return;
         }
 
+        const page = new Page(pageName, notebookId);
+        createNotebookPage(page);
+
         setPageName("");
+        closeModal();
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

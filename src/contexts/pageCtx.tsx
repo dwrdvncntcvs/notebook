@@ -14,11 +14,13 @@ import PageService from "../services/page";
 interface PageData {
     pages: Page[];
     notebookId: string;
+    createNotebookPage: (page: Page) => void;
 }
 
 const pageData: PageData = {
     pages: [],
     notebookId: "",
+    createNotebookPage: (page: Page) => {},
 };
 
 const PageContext = createContext<PageData>(pageData);
@@ -41,9 +43,18 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         getAllPages();
     }, [getAllPages]);
 
+    const createNotebookPage = (page: Page) => {
+        pageService.createPage(page);
+        getAllPages();
+    };
+
     return (
         <PageContext.Provider
-            value={{ pages, notebookId: notebookId as string }}
+            value={{
+                pages,
+                notebookId: notebookId as string,
+                createNotebookPage,
+            }}
         >
             {children}
         </PageContext.Provider>
