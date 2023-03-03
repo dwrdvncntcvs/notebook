@@ -18,8 +18,9 @@ const PagesAside = () => {
     const pageId = searchParams.get("page");
 
     useEffect(() => {
-        const p_id = pages[0]?.id;
-        setSearchParams({ notebookId, page: p_id });
+        if (!pageId || pageId === "undefined") {
+            setSearchParams({ notebookId, page: pages[0]?.id });
+        }
     }, [pages]);
 
     const selectPageHandler =
