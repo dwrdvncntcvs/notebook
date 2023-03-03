@@ -6,6 +6,7 @@ import { ModalProvider } from "./contexts/modalCtx";
 import { NotebookProvider } from "./contexts/notebookCtx";
 import { PageProvider } from "./contexts/pageCtx";
 import { BrowserRouter } from "react-router-dom";
+import { NoteProvider } from "./contexts/noteCtx";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
@@ -14,9 +15,11 @@ root.render(
     <BrowserRouter>
         <NotebookProvider>
             <PageProvider>
-                <ModalProvider>
-                    <App />
-                </ModalProvider>
+                <NoteProvider>
+                    <ModalProvider>
+                        <App />
+                    </ModalProvider>
+                </NoteProvider>
             </PageProvider>
         </NotebookProvider>
     </BrowserRouter>
