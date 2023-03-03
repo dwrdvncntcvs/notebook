@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, SyntheticEvent } from "react";
 import { HiPlus } from "react-icons/hi";
 import { useSearchParams } from "react-router-dom";
 import { MODAL, useModalContext } from "../../contexts/modalCtx";
@@ -22,6 +22,11 @@ const PagesAside = () => {
         setSearchParams({ notebookId, page: p_id });
     }, [pages]);
 
+    const selectPageHandler =
+        (id: string) => (e: SyntheticEvent<HTMLButtonElement>) => {
+            setSearchParams({ notebookId, page: id });
+        };
+
     return (
         <aside>
             <div className={scss["aside-header"]}>
@@ -31,7 +36,11 @@ const PagesAside = () => {
             </div>
             <div className={scss.pages}>
                 {pages.map(({ id, name }) => (
-                    <button className={pageId === id ? scss.active : ""} key={id}>
+                    <button
+                        className={pageId === id ? scss.active : ""}
+                        key={id}
+                        onClick={selectPageHandler(id)}
+                    >
                         {name}
                     </button>
                 ))}
