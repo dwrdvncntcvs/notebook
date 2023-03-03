@@ -18,9 +18,14 @@ const PagesAside = () => {
     const pageId = searchParams.get("page");
 
     useEffect(() => {
-        if (!pageId || pageId === "undefined") {
-            setSearchParams({ notebookId, page: pages[0]?.id });
-        }
+        const checkPages = () => {
+            if (!pages) return;
+
+            if (!pageId || pageId === "undefined")
+                setSearchParams({ notebookId, page: pages[0]?.id });
+        };
+
+        checkPages();
     }, [pages]);
 
     const selectPageHandler =
@@ -36,15 +41,23 @@ const PagesAside = () => {
                 </button>
             </div>
             <div className={scss.pages}>
-                {pages.map(({ id, name }) => (
-                    <button
-                        className={pageId === id ? scss.active : ""}
-                        key={id}
-                        onClick={selectPageHandler(id)}
-                    >
-                        {name}
-                    </button>
-                ))}
+                {pages !== undefined ? (
+                    pages.map(({ id, name }) => (
+                        <button
+                            className={pageId === id ? scss.active : ""}
+                            key={id}
+                            onClick={selectPageHandler(id)}
+                        >
+                            {name}
+                        </button>
+                    ))
+                ) : (
+                    <div id={scss["no-page"]}>
+                        {"No Pages".split("").map((char, i) => (
+                            <span key={i}>{char}</span>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {name === MODAL.CREATE_PAGE ? <CreatePage /> : null}
