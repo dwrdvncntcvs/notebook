@@ -14,11 +14,13 @@ import { NoteService } from "../services/note";
 interface NoteData {
     notes: Note[];
     pageId: string;
+    createPageNote: (note: Note) => void;
 }
 
 const noteData: NoteData = {
     notes: [],
-    pageId: ""
+    pageId: "",
+    createPageNote: (note: Note) => {},
 };
 
 const NoteContext = createContext<NoteData>(noteData);
@@ -39,8 +41,13 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
         getAllPageNotes();
     }, [getAllPageNotes]);
 
+    const createPageNote = (note: Note) => {
+        noteService.createNote(note);
+        getAllPageNotes();
+    };
+
     return (
-        <NoteContext.Provider value={{ notes, pageId }}>
+        <NoteContext.Provider value={{ notes, pageId, createPageNote }}>
             {children}
         </NoteContext.Provider>
     );
