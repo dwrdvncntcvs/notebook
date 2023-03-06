@@ -15,6 +15,7 @@ interface NotebookData {
     notebooks: Notebook[];
     createNotebook: (notebook: Notebook) => void;
     deleteNotebook: (id: string) => void;
+    selectNotebook: (id: string) => void;
     notebookId: string;
 }
 
@@ -22,6 +23,7 @@ const notebookData: NotebookData = {
     notebooks: [],
     createNotebook(notebook: Notebook) {},
     deleteNotebook(id: string) {},
+    selectNotebook(id: string) {},
     notebookId: "",
 };
 
@@ -61,9 +63,19 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
         getAllNotebooks();
     };
 
+    const selectNotebook = (id: string) => {
+        setSearchParams({ notebookId: id });
+    };
+
     return (
         <NotebookContext.Provider
-            value={{ notebooks, createNotebook, notebookId, deleteNotebook }}
+            value={{
+                notebooks,
+                createNotebook,
+                notebookId,
+                deleteNotebook,
+                selectNotebook,
+            }}
         >
             {children}
         </NotebookContext.Provider>

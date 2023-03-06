@@ -1,21 +1,15 @@
-import React, { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import React from "react";
 import { MODAL, useModalContext } from "../../contexts/modalCtx";
 import scss from "./notebookNav.module.scss";
 import { HiPlus } from "react-icons/hi";
 import CreateModal from "../CreateNotebook/CreateModal";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import { HiX } from "react-icons/hi";
-import { Notebook } from "../../models/Notebook";
 
 const NotebookNav = () => {
     const { name, openModal } = useModalContext()!;
-    const { notebooks, notebookId, deleteNotebook } = useNotebookContext();
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    const selectNotebookHandler = (id: string) => {
-        setSearchParams({ notebookId: id });
-    };
+    const { notebooks, notebookId, deleteNotebook, selectNotebook } =
+        useNotebookContext();
 
     const openModalAction = () => {
         openModal(MODAL.CREATE_NOTEBOOK);
@@ -24,7 +18,7 @@ const NotebookNav = () => {
     const deleteNotebookAction = (id: string) => {
         const prevNotebook = notebooks[notebooks.length - 2];
         deleteNotebook(id);
-        selectNotebookHandler(prevNotebook.id);
+        selectNotebook(prevNotebook.id);
     };
 
     return (
@@ -42,7 +36,7 @@ const NotebookNav = () => {
                     <div
                         className={scss["notebook-tab-item"]}
                         id={scss["note-title"]}
-                        onClick={() => selectNotebookHandler(id)}
+                        onClick={() => selectNotebook(id)}
                     >
                         {name}
                     </div>
