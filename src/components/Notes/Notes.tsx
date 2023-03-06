@@ -11,12 +11,15 @@ const Notes = () => {
     const { pages } = usePageContext();
     const { notebooks } = useNotebookContext();
 
+    const noNotebooksClass =
+        notebooks.length === 0
+            ? `${scss["main-max-width"]} ${scss["border-none"]}`
+            : "";
+
+    const noPagesClass = pages === undefined ? scss["main-max-height"] : "";
+
     return (
-        <main
-            className={`${scss.main} ${
-                pages === undefined ? scss["main-max-height"] : ""
-            } ${notebooks.length === 0 ? scss["main-max-width"] : ""} `}
-        >
+        <main className={`${scss.main} ${noPagesClass} ${noNotebooksClass} `}>
             {notes ? (
                 notes.map(({ createdAt, id, note }) => (
                     <div key={id} className={scss.note}>
