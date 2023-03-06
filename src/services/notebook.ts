@@ -3,6 +3,7 @@ import { Notebook } from "../models/Notebook";
 interface NotebookInterface {
     getAll: () => Notebook[];
     create: (notebook: Notebook) => void;
+    delete: (notebookId: string) => void;
 }
 
 export default class NotebookService implements NotebookInterface {
@@ -22,5 +23,9 @@ export default class NotebookService implements NotebookInterface {
         ) as Notebook[];
 
         localStorage.setItem(this.n, JSON.stringify([...notebooks, notebook]));
+    }
+
+    delete(id: string ) {
+        
     }
 }

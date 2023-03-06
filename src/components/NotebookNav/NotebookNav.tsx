@@ -5,6 +5,7 @@ import scss from "./notebookNav.module.scss";
 import { HiPlus } from "react-icons/hi";
 import CreateModal from "../CreateNotebook/CreateModal";
 import { useNotebookContext } from "../../contexts/notebookCtx";
+import { HiX } from "react-icons/hi";
 
 const NotebookNav = () => {
     const { name, openModal } = useModalContext()!;
@@ -25,16 +26,28 @@ const NotebookNav = () => {
                 <HiPlus />
             </button>
             {notebooks.map(({ id, name }) => (
-                <button
+                <div
                     key={id}
-                    className={`${scss["notebook-btn"]} ${
+                    className={`${scss["notebook-tab"]} ${
                         notebookId === id ? scss.active : ""
                     }`}
-                    id={scss["note-title"]}
-                    onClick={() => selectNotebookHandler(id)}
                 >
-                    {name}
-                </button>
+                    <div
+                        className={scss["notebook-tab-item"]}
+                        id={scss["note-title"]}
+                        onClick={() => selectNotebookHandler(id)}
+                    >
+                        {name}
+                    </div>
+                    <button
+                        hidden={notebookId !== id}
+                        onClick={() => {
+                            console.log("Delete", id);
+                        }}
+                    >
+                        <HiX />
+                    </button>
+                </div>
             ))}
 
             {name === MODAL.CREATE_NOTEBOOK ? <CreateModal /> : null}
