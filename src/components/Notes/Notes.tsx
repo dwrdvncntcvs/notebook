@@ -17,7 +17,6 @@ const Notes = () => {
                 pages === undefined ? scss["main-max-height"] : ""
             } ${notebooks.length === 0 ? scss["main-max-width"] : ""} `}
         >
-            <h2>Notes Title</h2>
             {notes ? (
                 notes.map(({ createdAt, id, note }) => (
                     <div key={id} className={scss.note}>
