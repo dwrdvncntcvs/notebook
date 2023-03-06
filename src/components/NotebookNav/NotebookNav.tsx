@@ -6,10 +6,11 @@ import { HiPlus } from "react-icons/hi";
 import CreateModal from "../CreateNotebook/CreateModal";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import { HiX } from "react-icons/hi";
+import { Notebook } from "../../models/Notebook";
 
 const NotebookNav = () => {
     const { name, openModal } = useModalContext()!;
-    const { notebooks, notebookId } = useNotebookContext();
+    const { notebooks, notebookId, deleteNotebook } = useNotebookContext();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const selectNotebookHandler = (id: string) => {
@@ -18,6 +19,12 @@ const NotebookNav = () => {
 
     const openModalAction = () => {
         openModal(MODAL.CREATE_NOTEBOOK);
+    };
+
+    const deleteNotebookAction = (id: string) => {
+        const prevNotebook = notebooks[notebooks.length - 2];
+        deleteNotebook(id);
+        selectNotebookHandler(prevNotebook.id);
     };
 
     return (
@@ -42,7 +49,7 @@ const NotebookNav = () => {
                     <button
                         hidden={notebookId !== id}
                         onClick={() => {
-                            console.log("Delete", id);
+                            deleteNotebookAction(id);
                         }}
                     >
                         <HiX />

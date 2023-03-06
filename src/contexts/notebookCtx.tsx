@@ -14,12 +14,14 @@ import NotebookService from "../services/notebook";
 interface NotebookData {
     notebooks: Notebook[];
     createNotebook: (notebook: Notebook) => void;
+    deleteNotebook: (id: string) => void;
     notebookId: string;
 }
 
 const notebookData: NotebookData = {
     notebooks: [],
     createNotebook(notebook: Notebook) {},
+    deleteNotebook(id: string) {},
     notebookId: "",
 };
 
@@ -54,9 +56,14 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
         getAllNotebooks();
     };
 
+    const deleteNotebook = (id: string) => {
+        notebookService.delete(id);
+        getAllNotebooks();
+    };
+
     return (
         <NotebookContext.Provider
-            value={{ notebooks, createNotebook, notebookId }}
+            value={{ notebooks, createNotebook, notebookId, deleteNotebook }}
         >
             {children}
         </NotebookContext.Provider>
