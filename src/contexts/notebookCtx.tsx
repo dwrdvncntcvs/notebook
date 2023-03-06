@@ -56,6 +56,7 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
     const createNotebook = (notebook: Notebook) => {
         notebookService.create(notebook);
         getAllNotebooks();
+        setSearchParams({ notebookId: notebook.id });
     };
 
     const deleteNotebook = (id: string) => {
