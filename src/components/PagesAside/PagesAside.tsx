@@ -1,4 +1,4 @@
-import React, { useEffect, SyntheticEvent } from "react";
+import React, { SyntheticEvent } from "react";
 import { HiPlus } from "react-icons/hi";
 import { useSearchParams } from "react-router-dom";
 import { MODAL, useModalContext } from "../../contexts/modalCtx";
@@ -10,7 +10,7 @@ import scss from "./pagesAside.module.scss";
 const PagesAside = () => {
     const { openModal, name } = useModalContext()!;
     const { pages, pageId } = usePageContext();
-    const { notebookId } = useNotebookContext();
+    const { notebookId, notebooks } = useNotebookContext();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const createPageHandler = () => {
@@ -23,7 +23,7 @@ const PagesAside = () => {
         };
 
     return (
-        <aside>
+        <aside className={notebooks.length === 0 ? scss.hidden : ""}>
             <div className={scss["aside-header"]}>
                 <button id={scss["add-page"]} onClick={createPageHandler}>
                     <HiPlus /> Page

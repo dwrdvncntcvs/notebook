@@ -1,4 +1,5 @@
 import React from "react";
+import { useNotebookContext } from "../../contexts/notebookCtx";
 import { useNoteContext } from "../../contexts/noteCtx";
 import { usePageContext } from "../../contexts/pageCtx";
 import { formatDate } from "../../utils/helper";
@@ -8,12 +9,13 @@ import scss from "./notes.module.scss";
 const Notes = () => {
     const { notes } = useNoteContext();
     const { pages } = usePageContext();
+    const { notebooks } = useNotebookContext();
 
     return (
         <main
             className={`${scss.main} ${
                 pages === undefined ? scss["main-max-height"] : ""
-            }`}
+            } ${notebooks.length === 0 ? scss["main-max-width"] : ""} `}
         >
             <h2>Notes Title</h2>
             {notes ? (
