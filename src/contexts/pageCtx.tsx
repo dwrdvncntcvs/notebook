@@ -13,24 +13,25 @@ import PageService from "../services/page";
 
 interface PageData {
     pages: Page[];
-    notebookId: string;
     createNotebookPage: (page: Page) => void;
+    pageId: string;
 }
 
 const pageData: PageData = {
     pages: [],
-    notebookId: "",
     createNotebookPage: (page: Page) => {},
+    pageId: "",
 };
 
 const PageContext = createContext<PageData>(pageData);
 
 const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     const [pages, setPages] = useState<Page[]>([]);
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const pageService = new PageService();
 
-    const notebookId = searchParams.get("notebookId");
+    const notebookId = searchParams.get("notebookId") as string;
+    const pageId = searchParams.get("page") as string;
 
     const getAllPages = useCallback(() => {
         if (!notebookId) return;
@@ -43,6 +44,17 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         getAllPages();
     }, [getAllPages]);
 
+    useEffect(() => {
+        const checkPages = () => {
+            if (!pages) return;
+
+            if (!pageId || pageId === "undefined")
+                setSearchParams({ notebookId, page: pages[0]?.id });
+        };
+
+        checkPages();
+    }, [pages]);
+
     const createNotebookPage = (page: Page) => {
         pageService.createPage(page);
         getAllPages();
@@ -52,8 +64,8 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         <PageContext.Provider
             value={{
                 pages,
-                notebookId: notebookId as string,
                 createNotebookPage,
+                pageId,
             }}
         >
             {children}

@@ -2,31 +2,20 @@ import React, { useEffect, SyntheticEvent } from "react";
 import { HiPlus } from "react-icons/hi";
 import { useSearchParams } from "react-router-dom";
 import { MODAL, useModalContext } from "../../contexts/modalCtx";
+import { useNotebookContext } from "../../contexts/notebookCtx";
 import { usePageContext } from "../../contexts/pageCtx";
 import CreatePage from "../CreatePage/CreatePage";
 import scss from "./pagesAside.module.scss";
 
 const PagesAside = () => {
     const { openModal, name } = useModalContext()!;
-    const { pages, notebookId } = usePageContext();
+    const { pages, pageId } = usePageContext();
+    const { notebookId } = useNotebookContext();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const createPageHandler = () => {
         openModal(MODAL.CREATE_PAGE);
     };
-
-    const pageId = searchParams.get("page");
-
-    useEffect(() => {
-        const checkPages = () => {
-            if (!pages) return;
-
-            if (!pageId || pageId === "undefined")
-                setSearchParams({ notebookId, page: pages[0]?.id });
-        };
-
-        checkPages();
-    }, [pages]);
 
     const selectPageHandler =
         (id: string) => (e: SyntheticEvent<HTMLButtonElement>) => {

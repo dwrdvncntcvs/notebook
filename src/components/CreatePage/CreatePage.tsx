@@ -1,6 +1,7 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
 import { toast } from "react-toastify";
 import { useModalContext } from "../../contexts/modalCtx";
+import { useNotebookContext } from "../../contexts/notebookCtx";
 import { usePageContext } from "../../contexts/pageCtx";
 import Modal from "../../layouts/Modal/Modal";
 import { Page } from "../../models/Page";
@@ -16,7 +17,8 @@ const Header = () => {
 
 const Body = () => {
     const [pageName, setPageName] = useState("");
-    const { createNotebookPage, notebookId } = usePageContext();
+    const { createNotebookPage } = usePageContext();
+    const { notebookId } = useNotebookContext();
     const { closeModal } = useModalContext()!;
 
     const submitHandler = (e: FormEvent) => {
