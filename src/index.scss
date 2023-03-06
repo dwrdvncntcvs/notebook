@@ -72,7 +72,8 @@ aside {
     flex-direction: column;
 }
 
-main {
+main,
+.main-content {
     grid-column: 2 / -1;
     grid-row: 2 / -3;
     display: flex;
@@ -87,4 +88,8 @@ section {
     display: flex;
     gap: 10px;
     background-color: white;
+}
+
+.hidden {
+    display: none;
 }
