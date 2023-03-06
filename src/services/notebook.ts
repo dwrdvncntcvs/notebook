@@ -7,7 +7,7 @@ interface NotebookInterface {
 }
 
 export default class NotebookService implements NotebookInterface {
-    n = "notebooks";
+    private n = "notebooks";
 
     getAll(): Notebook[] {
         const notebooks = JSON.parse(
@@ -25,7 +25,15 @@ export default class NotebookService implements NotebookInterface {
         localStorage.setItem(this.n, JSON.stringify([...notebooks, notebook]));
     }
 
-    delete(id: string ) {
-        
+    delete(id: string) {
+        const notebooks = JSON.parse(
+            localStorage.getItem(this.n)!
+        ) as Notebook[];
+
+        const updatedNotebooks = notebooks.filter(
+            (notebook) => notebook.id !== id
+        );
+
+        localStorage.setItem("notebooks", JSON.stringify(updatedNotebooks));
     }
 }
