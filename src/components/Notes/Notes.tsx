@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { HiTrash } from "react-icons/hi";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import { useNoteContext } from "../../contexts/noteCtx";
 import { usePageContext } from "../../contexts/pageCtx";
@@ -23,8 +24,15 @@ const Notes = () => {
             {notes ? (
                 notes.map(({ createdAt, id, note }) => (
                     <div key={id} className={scss.note}>
-                        <p>{note}</p>
-                        <p>{formatDate(createdAt)}</p>
+                        <div className={scss["note-content"]}>
+                            <p>{note}</p>
+                        </div>
+                        <div className={scss["note-actions"]}>
+                            <button id={scss.delete}>
+                                <HiTrash />
+                            </button>{" "}
+                            <p>{formatDate(createdAt)}</p>
+                        </div>
                     </div>
                 ))
             ) : (

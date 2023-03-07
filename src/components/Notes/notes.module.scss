@@ -1,3 +1,5 @@
+@import "../../variables.scss";
+
 .main {
     h2 {
         margin: 20px;
@@ -7,15 +9,45 @@
         margin: 0;
         padding: 20px;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        position: relative;
 
-        p {
-            margin: 0;
+        .note-content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            p {
+                margin: 0;
+            }
         }
 
-        p:nth-child(2) {
-            font-size: 0.75rem;
-            align-self: flex-end;
+        .note-actions {
+            width: 200px;
+            text-align: end;
+
+            p {
+                font-size: 0.75rem;
+                align-self: flex-end;
+                margin: 0;
+            }
+
+            button {
+                width: 30px;
+                height: 30px;
+                line-height: 32px;
+                margin-right: 5px;
+                color: gray;
+                background-color: transparent;
+                font-size: 1.1rem;
+                transition: all ease 0.2s;
+                border: 1px solid transparent;
+            }
+
+            #delete:hover {
+                color: $danger;
+                border-radius: 100%;
+                border-color: $danger;
+            }
         }
 
         &:nth-child(even) {
