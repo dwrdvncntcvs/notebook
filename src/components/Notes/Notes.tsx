@@ -8,7 +8,7 @@ import NoNotes from "../NoNotes/NoNotes";
 import scss from "./notes.module.scss";
 
 const Notes = () => {
-    const { notes } = useNoteContext();
+    const { notes, deletePageNote } = useNoteContext();
     const { pages } = usePageContext();
     const { notebooks } = useNotebookContext();
 
@@ -22,13 +22,16 @@ const Notes = () => {
     return (
         <main className={`${scss.main} ${noPagesClass} ${noNotebooksClass} `}>
             {notes ? (
-                notes.map(({ createdAt, id, note }) => (
+                notes.map(({ createdAt, id, note, pageId }) => (
                     <div key={id} className={scss.note}>
                         <div className={scss["note-content"]}>
                             <p>{note}</p>
                         </div>
                         <div className={scss["note-actions"]}>
-                            <button id={scss.delete}>
+                            <button
+                                id={scss.delete}
+                                onClick={() => deletePageNote(pageId, id)}
+                            >
                                 <HiTrash />
                             </button>{" "}
                             <p>{formatDate(createdAt)}</p>

@@ -15,12 +15,14 @@ interface NoteData {
     notes: Note[];
     pageId: string;
     createPageNote: (note: Note) => void;
+    deletePageNote: (pageId: string, noteId: string) => void;
 }
 
 const noteData: NoteData = {
     notes: [],
     pageId: "",
     createPageNote: (note: Note) => {},
+    deletePageNote: (pageId: string, noteId: string) => {},
 };
 
 const NoteContext = createContext<NoteData>(noteData);
@@ -46,8 +48,15 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
         getAllPageNotes();
     };
 
+    const deletePageNote = (pageId: string, noteId: string) => {
+        noteService.deletePageNoteById(pageId, noteId);
+        getAllPageNotes();
+    };
+
     return (
-        <NoteContext.Provider value={{ notes, pageId, createPageNote }}>
+        <NoteContext.Provider
+            value={{ notes, pageId, createPageNote, deletePageNote }}
+        >
             {children}
         </NoteContext.Provider>
     );
