@@ -9,6 +9,7 @@ interface NoteInterface {
     getAllNotes: () => NoteDictionary;
     createNote: (note: Note) => void;
     deleteNoteByPageId: (pageId: string) => void;
+    deletePageNoteById: (pageId: string, noteId: string) => void;
 }
 
 export class NoteService implements NoteInterface {
@@ -44,5 +45,21 @@ export class NoteService implements NoteInterface {
         delete notes[pageId];
 
         localStorage.setItem("notes", JSON.stringify(notes));
+    }
+
+    deletePageNoteById(pageId: string, noteId: string) {
+        const allNotes = this.getAllNotes();
+        const allPagesNotes = this.getAllPageNotes(pageId);
+
+        const updatedNotes = allPagesNotes.filter(({ id }) => id !== noteId);
+
+        if (updatedNotes.length < 1) {
+            delete allNotes[pageId];
+            localStorage.setItem("notes", JSON.stringify(allNotes));
+            return;
+        }
+
+        allNotes[pageId] = updatedNotes;
+        localStorage.setItem("notes", JSON.stringify(allNotes));
     }
 }
