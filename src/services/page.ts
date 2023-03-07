@@ -10,6 +10,7 @@ interface PageInterface {
     getAllNotebookPage: (notebookId: string) => Page[];
     createPage: (page: Page) => void;
     deletePageByNotebookId: (notebookId: string) => void;
+    deleteNotebookPageByPageId: (notebookId: string, pageId: string) => void;
 }
 
 export default class PageService implements PageInterface {
@@ -53,5 +54,25 @@ export default class PageService implements PageInterface {
         delete pages[notebookId];
 
         localStorage.setItem("pages", JSON.stringify(pages));
+    }
+
+    deleteNotebookPageByPageId(notebookId: string, pageId: string) {
+        const pages = this.getAllPages();
+        const notebookPages = this.getAllNotebookPage(notebookId);
+
+        this.noteService.deleteNoteByPageId(pageId);
+
+        const filteredNotebookPages = notebookPages.filter(
+            (notebookPage) => notebookPage.id !== pageId
+        );
+
+        if (filteredNotebookPages.length <= 0) {
+            delete pages[notebookId];
+            localStorage.setItem("pages", JSON.stringify({ ...pages }));
+            return;
+        }
+
+        pages[notebookId] = filteredNotebookPages;
+        localStorage.setItem("pages", JSON.stringify({ ...pages }));
     }
 }
