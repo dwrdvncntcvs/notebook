@@ -15,12 +15,14 @@ interface PageData {
     pages: Page[];
     createNotebookPage: (page: Page) => void;
     pageId: string;
+    deleteNotebookPageById: (notebookId: string, pageId: string) => void;
 }
 
 const pageData: PageData = {
     pages: [],
     createNotebookPage: (page: Page) => {},
     pageId: "",
+    deleteNotebookPageById: (notebookId: string, pageId: string) => {},
 };
 
 const PageContext = createContext<PageData>(pageData);
@@ -60,12 +62,18 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         getAllPages();
     };
 
+    const deleteNotebookPageById = (notebookId: string, pageId: string) => {
+        pageService.deleteNotebookPageByPageId(notebookId, pageId);
+        getAllPages();
+    };
+
     return (
         <PageContext.Provider
             value={{
                 pages,
                 createNotebookPage,
                 pageId,
+                deleteNotebookPageById,
             }}
         >
             {children}

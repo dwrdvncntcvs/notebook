@@ -9,7 +9,7 @@ import scss from "./pagesAside.module.scss";
 
 const PagesAside = () => {
     const { openModal, name } = useModalContext()!;
-    const { pages, pageId } = usePageContext();
+    const { pages, pageId, deleteNotebookPageById } = usePageContext();
     const { notebookId, notebooks } = useNotebookContext();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -21,6 +21,18 @@ const PagesAside = () => {
         (id: string) => (e: SyntheticEvent<HTMLElement>) => {
             setSearchParams({ notebookId, page: id });
         };
+
+    const deleteNotebookPageHandler = (pageId: string) => () => {
+        const prevPage = pages[pages.length - 2];
+        deleteNotebookPageById(notebookId, pageId);
+
+        if (notebooks.length <= 1) {
+            setSearchParams({ notebookId });
+            return;
+        }
+
+        selectPageHandler(prevPage.id);
+    };
 
     return (
         <aside className={notebooks.length === 0 ? scss.hidden : ""}>
@@ -41,7 +53,10 @@ const PagesAside = () => {
                             >
                                 {name}
                             </div>
-                            <button hidden={pageId !== id}>
+                            <button
+                                hidden={pageId !== id}
+                                onClick={deleteNotebookPageHandler(id)}
+                            >
                                 <HiOutlineTrash />
                             </button>
                         </div>
