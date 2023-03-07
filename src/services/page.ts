@@ -1,4 +1,5 @@
 import { Page } from "../models/Page";
+import { NoteService } from "./note";
 
 interface PageDictionary {
     [key: string]: Page[];
@@ -12,7 +13,11 @@ interface PageInterface {
 }
 
 export default class PageService implements PageInterface {
-    constructor() {}
+    private noteService: NoteService;
+
+    constructor() {
+        this.noteService = new NoteService();
+    }
 
     getAllPages() {
         return JSON.parse(localStorage.getItem("pages")!) as PageDictionary;
@@ -40,6 +45,10 @@ export default class PageService implements PageInterface {
 
     deletePageByNotebookId(notebookId: string) {
         const pages = this.getAllPages();
+
+        if (pages[notebookId])
+            for (let { id } of pages[notebookId])
+                this.noteService.deleteNoteByPageId(id);
 
         delete pages[notebookId];
 
