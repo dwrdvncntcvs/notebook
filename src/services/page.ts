@@ -8,6 +8,7 @@ interface PageInterface {
     getAllPages: () => PageDictionary;
     getAllNotebookPage: (notebookId: string) => Page[];
     createPage: (page: Page) => void;
+    deletePageByNotebookId: (notebookId: string) => void;
 }
 
 export default class PageService implements PageInterface {
@@ -33,6 +34,14 @@ export default class PageService implements PageInterface {
         }
 
         pages[page.notebookId].push(page);
+
+        localStorage.setItem("pages", JSON.stringify(pages));
+    }
+
+    deletePageByNotebookId(notebookId: string) {
+        const pages = this.getAllPages();
+
+        delete pages[notebookId];
 
         localStorage.setItem("pages", JSON.stringify(pages));
     }

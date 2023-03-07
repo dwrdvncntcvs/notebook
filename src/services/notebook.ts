@@ -1,4 +1,5 @@
 import { Notebook } from "../models/Notebook";
+import PageService from "./page";
 
 interface NotebookInterface {
     getAll: () => Notebook[];
@@ -8,6 +9,11 @@ interface NotebookInterface {
 
 export default class NotebookService implements NotebookInterface {
     private n = "notebooks";
+    private pageService: PageService;
+
+    constructor() {
+        this.pageService = new PageService();
+    }
 
     getAll(): Notebook[] {
         const notebooks = JSON.parse(
@@ -33,6 +39,8 @@ export default class NotebookService implements NotebookInterface {
         const updatedNotebooks = notebooks.filter(
             (notebook) => notebook.id !== id
         );
+
+        this.pageService.deletePageByNotebookId(id);
 
         localStorage.setItem("notebooks", JSON.stringify(updatedNotebooks));
     }
