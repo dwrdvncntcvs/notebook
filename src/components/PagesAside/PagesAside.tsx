@@ -1,5 +1,5 @@
 import React, { SyntheticEvent } from "react";
-import { HiPlus } from "react-icons/hi";
+import { HiOutlineTrash, HiPlus } from "react-icons/hi";
 import { useSearchParams } from "react-router-dom";
 import { MODAL, useModalContext } from "../../contexts/modalCtx";
 import { useNotebookContext } from "../../contexts/notebookCtx";
@@ -18,7 +18,7 @@ const PagesAside = () => {
     };
 
     const selectPageHandler =
-        (id: string) => (e: SyntheticEvent<HTMLButtonElement>) => {
+        (id: string) => (e: SyntheticEvent<HTMLElement>) => {
             setSearchParams({ notebookId, page: id });
         };
 
@@ -32,13 +32,19 @@ const PagesAside = () => {
             <div className={scss.pages}>
                 {pages !== undefined ? (
                     pages.map(({ id, name }) => (
-                        <button
-                            className={pageId === id ? scss.active : ""}
-                            key={id}
-                            onClick={selectPageHandler(id)}
-                        >
-                            {name}
-                        </button>
+                        <div className={`${scss.page} `} key={id}>
+                            <div
+                                className={`${scss["page-content"]} ${
+                                    pageId === id ? scss.active : ""
+                                }`}
+                                onClick={selectPageHandler(id)}
+                            >
+                                {name}
+                            </div>
+                            <button hidden={pageId !== id}>
+                                <HiOutlineTrash />
+                            </button>
+                        </div>
                     ))
                 ) : (
                     <div id={scss["no-page"]}>

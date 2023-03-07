@@ -7,16 +7,49 @@
     justify-content: flex-start;
     height: 100%;
 
-    button {
+    .page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
         width: 100%;
-        padding: 10px;
-        background-color: white;
         border: none;
-        transition: all ease 0.2s;
-    }
 
-    .active {
-        background-color: $grid-border-color;
+        .page-content {
+            width: 95%;
+            padding: 10px;
+            padding-left: 1.25rem;
+            transition: all ease 0.2s;
+            border-radius: 5px;
+        }
+
+        .active {
+            background-color: gray;
+            color: white;
+        }
+
+        button {
+            padding: 0;
+            position: absolute;
+            right: 10px;
+            font-size: 1.25rem;
+            vertical-align: middle;
+            line-height: 35px;
+            text-align: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            background-color: transparent;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all ease 0.2s;
+
+            &:hover {
+                color: $danger;
+            }
+        }
     }
 
     #no-page {
