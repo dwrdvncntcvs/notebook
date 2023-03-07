@@ -59,6 +59,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const createNotebookPage = (page: Page) => {
         pageService.createPage(page);
+        setSearchParams({ notebookId, page: page.id });
         getAllPages();
     };
 
