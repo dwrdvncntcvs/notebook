@@ -18,23 +18,28 @@
             width: 100%;
             p {
                 margin: 0;
+                white-space: pre-line;
+                padding: 20px 0px;
             }
         }
 
         .note-actions {
             width: 200px;
             text-align: end;
+            position: relative;
 
             p {
                 font-size: 0.75rem;
-                align-self: flex-end;
                 margin: 0;
+                position: absolute;
+                right: 0px;
+                bottom: 0px;
             }
 
             button {
                 width: 30px;
                 height: 30px;
-                line-height: 32px;
+                line-height: 30px;
                 margin-right: 5px;
                 color: gray;
                 background-color: transparent;
