@@ -6,15 +6,19 @@ interface NoteDictionary {
 
 interface NoteInterface {
     getAllPageNotes: (pageId: string) => Note[];
+    getAllNotes: () => NoteDictionary;
+    createNote: (note: Note) => void;
 }
 
 export class NoteService implements NoteInterface {
-    n = "notes";
+    private n = "notes";
+
+    getAllNotes = () => {
+        return JSON.parse(localStorage.getItem(this.n)!) as NoteDictionary;
+    };
 
     getAllPageNotes = (pageId: string): Note[] => {
-        const notes = JSON.parse(
-            localStorage.getItem(this.n)!
-        ) as NoteDictionary;
+        const notes = this.getAllNotes();
 
         const pageNotes = notes[pageId];
 
@@ -22,9 +26,7 @@ export class NoteService implements NoteInterface {
     };
 
     createNote = (note: Note) => {
-        const notes = JSON.parse(
-            localStorage.getItem(this.n)!
-        ) as NoteDictionary;
+        const notes = this.getAllNotes();
 
         if (!notes[note.pageId]) {
             notes[note.pageId] = [];
