@@ -6,6 +6,7 @@ import {
     useState,
     useCallback,
     useEffect,
+    useReducer,
 } from "react";
 import { useSearchParams } from "react-router-dom";
 import Note from "../models/Note";
@@ -25,10 +26,56 @@ const noteData: NoteData = {
     deletePageNote: (pageId: string, noteId: string) => {},
 };
 
+interface NoteState {
+    notes: Note[];
+    pageId: string;
+}
+
+type Action =
+    | {
+          type: "setNote";
+          payload: Note[];
+      }
+    | {
+          type: "setPageId";
+          payload: string;
+      }
+    | {
+          type: "createNote";
+          payload: Note;
+      }
+    | {
+          type: "deleteNote";
+          payload: string;
+      };
+
+const noteReducer = (state: NoteState, action: Action) => {
+    switch (action.type) {
+        case "setNote":
+            return { ...state, notes: action.payload };
+        case "setPageId":
+            return { ...state, pageId: action.payload };
+        case "createNote":
+            return { ...state, notes: [...state.notes, action.payload] };
+        case "deleteNote":
+            return {
+                ...state,
+                notes: state.notes.filter(({ id }) => id !== action.payload),
+            };
+        default:
+            return state;
+    }
+};
+
+const noteState: NoteState = {
+    notes: [],
+    pageId: "",
+};
+
 const NoteContext = createContext<NoteData>(noteData);
 
 const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [notes, setNotes] = useState<Note[]>([]);
+    const [state, dispatch] = useReducer(noteReducer, noteState);
     const [searchParams] = useSearchParams();
 
     const noteService = new NoteService();
@@ -36,7 +83,8 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const getAllPageNotes = useCallback(() => {
         const allPageNotes = noteService.getAllPageNotes(pageId);
-        setNotes(allPageNotes);
+        dispatch({ type: "setPageId", payload: pageId });
+        dispatch({ type: "setNote", payload: allPageNotes });
     }, [pageId]);
 
     useEffect(() => {
@@ -45,17 +93,17 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const createPageNote = (note: Note) => {
         noteService.createNote(note);
-        getAllPageNotes();
+        dispatch({ type: "createNote", payload: note });
     };
 
     const deletePageNote = (pageId: string, noteId: string) => {
         noteService.deletePageNoteById(pageId, noteId);
-        getAllPageNotes();
+        dispatch({ type: "deleteNote", payload: noteId });
     };
 
     return (
         <NoteContext.Provider
-            value={{ notes, pageId, createPageNote, deletePageNote }}
+            value={{ ...state, createPageNote, deletePageNote }}
         >
             {children}
         </NoteContext.Provider>
