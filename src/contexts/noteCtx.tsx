@@ -27,6 +27,7 @@ interface NoteData {
     deletePageNote: (pageId: string, noteId: string) => void;
     selectNote: (note: Note) => void;
     unSelectNote: (noteId: string) => void;
+    updateNote: (pageId: string, note: Note) => void;
 }
 
 const noteData: NoteData = {
@@ -38,6 +39,7 @@ const noteData: NoteData = {
     deletePageNote: (pageId: string, noteId: string) => {},
     selectNote: (note: Note) => {},
     unSelectNote: (noteId: string) => {},
+    updateNote: (pageId: string, note: Note) => {},
 };
 
 interface NoteState {
@@ -71,6 +73,10 @@ type Action =
     | {
           type: "setSelectedNote";
           payload: Note;
+      }
+    | {
+          type: "updateNote";
+          payload: Note;
       };
 
 const noteReducer = (state: NoteState, action: Action) => {
@@ -92,6 +98,13 @@ const noteReducer = (state: NoteState, action: Action) => {
             return {
                 ...state,
                 selectedNote: action.payload,
+            };
+        case "updateNote":
+            return {
+                ...state,
+                notes: state.notes.map((note) =>
+                    note.id === action.payload.id ? action.payload : note
+                ),
             };
         default:
             return state;
@@ -160,6 +173,12 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
         navigate({ search: `?${urlSearchParams.toString()}` });
     };
 
+    const updateNote = (pageId: string, note: Note) => {
+        noteService.updatePageNoteById(pageId, note);
+        dispatch({ type: "updateNote", payload: note });
+        unSelectNote(note.id);
+    };
+
     return (
         <NoteContext.Provider
             value={{
@@ -168,6 +187,7 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
                 deletePageNote,
                 selectNote,
                 unSelectNote,
+                updateNote,
             }}
         >
             {children}

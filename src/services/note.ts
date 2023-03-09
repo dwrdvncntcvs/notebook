@@ -10,6 +10,7 @@ interface NoteInterface {
     createNote: (note: Note) => void;
     deleteNoteByPageId: (pageId: string) => void;
     deletePageNoteById: (pageId: string, noteId: string) => void;
+    updatePageNoteById: (pageId: string, note: Note) => void;
 }
 
 export class NoteService implements NoteInterface {
@@ -60,6 +61,18 @@ export class NoteService implements NoteInterface {
         }
 
         allNotes[pageId] = updatedNotes;
+        localStorage.setItem("notes", JSON.stringify(allNotes));
+    }
+
+    updatePageNoteById(pageId: string, note: Note) {
+        const allNotes = this.getAllNotes();
+        const allPagesNotes = this.getAllPageNotes(pageId);
+
+        const updateNotes = allPagesNotes.map((pageNote) =>
+            pageNote.id === note.id ? note : pageNote
+        );
+
+        allNotes[pageId] = updateNotes;
         localStorage.setItem("notes", JSON.stringify(allNotes));
     }
 }

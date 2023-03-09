@@ -7,12 +7,13 @@ import Note from "../../models/Note";
 import scss from "./createNotes.module.scss";
 
 const CreateNotes = () => {
-    const { createPageNote, pageId, noteId, selectedNote } = useNoteContext();
+    const { createPageNote, pageId, noteId, selectedNote, updateNote } =
+        useNoteContext();
     const [note, setNote] = useState(selectedNote.note);
     const { pages } = usePageContext();
 
     useEffect(() => {
-        setNote(selectedNote.note)
+        setNote(selectedNote.note);
     }, [selectedNote.note]);
 
     const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -31,7 +32,8 @@ const CreateNotes = () => {
     };
 
     const updateHandler = () => {
-        console.log("Updated");
+        const noteToUpdate = { ...selectedNote, note, updatedAt: new Date() };
+        updateNote(pageId, noteToUpdate);
     };
 
     return (
