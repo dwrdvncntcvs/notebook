@@ -16,6 +16,7 @@ interface PageData {
     createNotebookPage: (page: Page) => void;
     pageId: string;
     deleteNotebookPageById: (notebookId: string, pageId: string) => void;
+    selectPage: (pageId: string) => void;
 }
 
 const pageData: PageData = {
@@ -23,6 +24,7 @@ const pageData: PageData = {
     createNotebookPage: (page: Page) => {},
     pageId: "",
     deleteNotebookPageById: (notebookId: string, pageId: string) => {},
+    selectPage: (pageId: string) => {},
 };
 
 interface PageState {
@@ -122,12 +124,18 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         dispatch({ type: "deletePage", payload: pageId });
     };
 
+    const selectPage = (pageId: string) => {
+        dispatch({ type: "setPageId", payload: pageId });
+        setSearchParams({ notebookId, page: pageId });
+    };
+
     return (
         <PageContext.Provider
             value={{
                 ...state,
                 createNotebookPage,
                 deleteNotebookPageById,
+                selectPage,
             }}
         >
             {children}
