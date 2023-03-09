@@ -8,8 +8,13 @@ import NoNotes from "../NoNotes/NoNotes";
 import scss from "./notes.module.scss";
 
 const Notes = () => {
-    const { notes, noteId, deletePageNote, selectNote, unSelectNote } =
-        useNoteContext();
+    const {
+        notes,
+        noteId,
+        deletePageNote,
+        selectNote,
+        unSelectNote,
+    } = useNoteContext();
     const { pages } = usePageContext();
     const { notebooks } = useNotebookContext();
 
@@ -23,7 +28,7 @@ const Notes = () => {
     return (
         <main className={`${scss.main} ${noPagesClass} ${noNotebooksClass} `}>
             {notes.length > 0 ? (
-                notes.map(({ createdAt, id, note, pageId }) => (
+                notes.map(({ createdAt, id, note, pageId, updatedAt }) => (
                     <div key={id} className={scss.note}>
                         <div className={scss["note-content"]}>
                             <p>{note}</p>
@@ -34,7 +39,13 @@ const Notes = () => {
                                     <button
                                         id={scss.edit}
                                         onClick={() => {
-                                            selectNote(id);
+                                            selectNote({
+                                                id,
+                                                note,
+                                                createdAt,
+                                                pageId,
+                                                updatedAt,
+                                            });
                                         }}
                                     >
                                         <HiPencil />

@@ -11,13 +11,21 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Note from "../models/Note";
 import { NoteService } from "../services/note";
 
+const defaultNote: Note = {
+    id: "",
+    note: "",
+    createdAt: new Date(),
+    pageId: "",
+    updatedAt: new Date(),
+};
 interface NoteData {
     notes: Note[];
     noteId: string;
     pageId: string;
+    selectedNote: Note;
     createPageNote: (note: Note) => void;
     deletePageNote: (pageId: string, noteId: string) => void;
-    selectNote: (noteId: string) => void;
+    selectNote: (note: Note) => void;
     unSelectNote: (noteId: string) => void;
 }
 
@@ -25,14 +33,16 @@ const noteData: NoteData = {
     notes: [],
     noteId: "",
     pageId: "",
+    selectedNote: defaultNote,
     createPageNote: (note: Note) => {},
     deletePageNote: (pageId: string, noteId: string) => {},
-    selectNote: (noteId: string) => {},
+    selectNote: (note: Note) => {},
     unSelectNote: (noteId: string) => {},
 };
 
 interface NoteState {
     notes: Note[];
+    selectedNote: Note;
     pageId: string;
     noteId: string;
 }
@@ -57,6 +67,10 @@ type Action =
     | {
           type: "setNoteId";
           payload: string;
+      }
+    | {
+          type: "setSelectedNote";
+          payload: Note;
       };
 
 const noteReducer = (state: NoteState, action: Action) => {
@@ -74,6 +88,11 @@ const noteReducer = (state: NoteState, action: Action) => {
                 ...state,
                 notes: state.notes.filter(({ id }) => id !== action.payload),
             };
+        case "setSelectedNote":
+            return {
+                ...state,
+                selectedNote: action.payload,
+            };
         default:
             return state;
     }
@@ -83,6 +102,7 @@ const noteState: NoteState = {
     notes: [],
     pageId: "",
     noteId: "",
+    selectedNote: defaultNote,
 };
 
 const NoteContext = createContext<NoteData>(noteData);
@@ -101,7 +121,14 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
     const getAllPageNotes = useCallback(() => {
         const allPageNotes = noteService.getAllPageNotes(pageId);
         dispatch({ type: "setPageId", payload: pageId });
-        dispatch({ type: "setNoteId", payload: noteId });
+        if (noteId) {
+            dispatch({ type: "setNoteId", payload: noteId });
+            const foundNote = allPageNotes.find((note) => note.id === noteId);
+
+            if (foundNote)
+                dispatch({ type: "setSelectedNote", payload: foundNote });
+        }
+
         dispatch({ type: "setNote", payload: allPageNotes });
     }, [pageId, noteId]);
 
@@ -119,14 +146,16 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
         dispatch({ type: "deleteNote", payload: noteId });
     };
 
-    const selectNote = (noteId: string) => {
-        dispatch({ type: "setNoteId", payload: noteId });
-        urlSearchParams.set("noteId", noteId);
+    const selectNote = (note: Note) => {
+        dispatch({ type: "setNoteId", payload: note.id });
+        dispatch({ type: "setSelectedNote", payload: note });
+        urlSearchParams.set("noteId", note.id);
         navigate({ search: `?${urlSearchParams.toString()}` });
     };
 
     const unSelectNote = (noteId: string) => {
         dispatch({ type: "setNoteId", payload: "" });
+        dispatch({ type: "setSelectedNote", payload: defaultNote });
         urlSearchParams.delete("noteId");
         navigate({ search: `?${urlSearchParams.toString()}` });
     };
