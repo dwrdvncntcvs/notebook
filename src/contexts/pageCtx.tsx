@@ -3,9 +3,9 @@ import {
     FC,
     PropsWithChildren,
     useContext,
-    useState,
     useCallback,
     useEffect,
+    useReducer,
 } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Page } from "../models/Page";
@@ -25,10 +25,56 @@ const pageData: PageData = {
     deleteNotebookPageById: (notebookId: string, pageId: string) => {},
 };
 
+interface PageState {
+    pages: Page[];
+    pageId: string;
+}
+
+type Action =
+    | {
+          type: "setPages";
+          payload: Page[];
+      }
+    | {
+          type: "setPageId";
+          payload: string;
+      }
+    | {
+          type: "createPage";
+          payload: Page;
+      }
+    | {
+          type: "deletePage";
+          payload: string;
+      };
+
+const pageState = {
+    pages: [],
+    pageId: "",
+};
+
+const pageReducer = (state: PageState, action: Action) => {
+    switch (action.type) {
+        case "setPages":
+            return { ...state, pages: action.payload };
+        case "setPageId":
+            return { ...state, pageId: action.payload };
+        case "createPage":
+            return { ...state, pages: [...state.pages, action.payload] };
+        case "deletePage":
+            return {
+                ...state,
+                pages: state.pages.filter(({ id }) => id !== action.payload),
+            };
+        default:
+            return state;
+    }
+};
+
 const PageContext = createContext<PageData>(pageData);
 
 const PageProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [pages, setPages] = useState<Page[]>([]);
+    const [state, dispatch] = useReducer(pageReducer, pageState);
     const [searchParams, setSearchParams] = useSearchParams();
     const pageService = new PageService();
 
@@ -39,8 +85,9 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         if (!notebookId) return;
 
         const allPages = pageService.getAllNotebookPage(notebookId);
-        setPages(allPages);
-    }, [notebookId]);
+        dispatch({ type: "setPageId", payload: pageId });
+        dispatch({ type: "setPages", payload: allPages });
+    }, [notebookId, pageId]);
 
     useEffect(() => {
         getAllPages();
@@ -48,32 +95,38 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
 
     useEffect(() => {
         const checkPages = () => {
-            if (!pages) return;
+            if (!state.pages) return;
 
-            if (!pageId || pageId === "undefined")
-                setSearchParams({ notebookId, page: pages[0]?.id });
+            if (!pageId || pageId === "undefined") {
+                const firstPageId = state.pages[0]?.id;
+                dispatch({ type: "setPageId", payload: firstPageId });
+
+                setSearchParams({ notebookId, page: firstPageId });
+            } else {
+                dispatch({ type: "setPageId", payload: state.pageId });
+            }
         };
 
         checkPages();
-    }, [pages]);
+    }, [state.pages, state.pageId]);
 
     const createNotebookPage = (page: Page) => {
         pageService.createPage(page);
         setSearchParams({ notebookId, page: page.id });
-        getAllPages();
+        dispatch({ type: "createPage", payload: page });
+        dispatch({ type: "setPageId", payload: page.id });
     };
 
     const deleteNotebookPageById = (notebookId: string, pageId: string) => {
         pageService.deleteNotebookPageByPageId(notebookId, pageId);
-        getAllPages();
+        dispatch({ type: "deletePage", payload: pageId });
     };
 
     return (
         <PageContext.Provider
             value={{
-                pages,
+                ...state,
                 createNotebookPage,
-                pageId,
                 deleteNotebookPageById,
             }}
         >
