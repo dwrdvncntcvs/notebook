@@ -29,7 +29,7 @@ export default class PageService implements PageInterface {
 
         const notebookPages = pages[notebookId];
 
-        return notebookPages;
+        return notebookPages || [];
     }
 
     createPage(page: Page): void {

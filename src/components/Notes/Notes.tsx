@@ -17,11 +17,11 @@ const Notes = () => {
             ? `${scss["main-max-width"]} ${scss["border-none"]}`
             : "";
 
-    const noPagesClass = pages === undefined ? scss["main-max-height"] : "";
+    const noPagesClass = pages.length < 1 ? scss["main-max-height"] : "";
 
     return (
         <main className={`${scss.main} ${noPagesClass} ${noNotebooksClass} `}>
-            {notes ? (
+            {notes.length > 0 ? (
                 notes.map(({ createdAt, id, note, pageId }) => (
                     <div key={id} className={scss.note}>
                         <div className={scss["note-content"]}>

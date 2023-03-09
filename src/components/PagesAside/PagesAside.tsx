@@ -9,9 +9,10 @@ import scss from "./pagesAside.module.scss";
 
 const PagesAside = () => {
     const { openModal, name } = useModalContext()!;
-    const { pages, pageId, deleteNotebookPageById } = usePageContext();
+    const { pages, pageId, deleteNotebookPageById, selectPage } =
+        usePageContext();
     const { notebookId, notebooks } = useNotebookContext();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [_, setSearchParams] = useSearchParams();
 
     const createPageHandler = () => {
         openModal(MODAL.CREATE_PAGE);
@@ -19,19 +20,19 @@ const PagesAside = () => {
 
     const selectPageHandler =
         (id: string) => (e: SyntheticEvent<HTMLElement>) => {
-            setSearchParams({ notebookId, page: id });
+            selectPage(id);
         };
 
     const deleteNotebookPageHandler = (pageId: string) => () => {
         const prevPage = pages[pages.length - 2];
         deleteNotebookPageById(notebookId, pageId);
-
-        if (notebooks.length <= 1) {
+        
+        if (pages.length <= 1) {
             setSearchParams({ notebookId });
             return;
         }
 
-        selectPageHandler(prevPage.id);
+        selectPage(prevPage.id);
     };
 
     return (
@@ -42,7 +43,7 @@ const PagesAside = () => {
                 </button>
             </div>
             <div className={scss.pages}>
-                {pages !== undefined ? (
+                {pages.length > 0 ? (
                     pages.map(({ id, name }) => (
                         <div className={`${scss.page} `} key={id}>
                             <div

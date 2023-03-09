@@ -27,7 +27,7 @@ const CreateNotes = () => {
     return (
         <section
             className={`${scss["create-notes"]} ${
-                 pages === undefined ? scss.hidden : ""
+                pages.length < 1 ? scss.hidden : ""
             }`}
         >
             <textarea

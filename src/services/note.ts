@@ -24,7 +24,7 @@ export class NoteService implements NoteInterface {
 
         const pageNotes = notes[pageId];
 
-        return pageNotes;
+        return pageNotes || [];
     }
 
     createNote(note: Note) {
