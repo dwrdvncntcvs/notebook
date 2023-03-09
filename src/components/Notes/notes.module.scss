@@ -46,12 +46,17 @@
                 font-size: 1.1rem;
                 transition: all ease 0.2s;
                 border: 1px solid transparent;
+                border-radius: 10px;
             }
 
             #delete:hover {
                 color: $danger;
-                border-radius: 100%;
                 border-color: $danger;
+            }
+
+            #edit:hover {
+                color: $warning;
+                border-color: $warning;
             }
         }
 

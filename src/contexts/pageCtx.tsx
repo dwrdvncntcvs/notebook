@@ -102,15 +102,17 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
             if (!pageId || pageId === "undefined") {
                 const firstPageId = state.pages[0]?.id;
                 dispatch({ type: "setPageId", payload: firstPageId });
+                console.log("First Page Id: ", firstPageId)
 
                 setSearchParams({ notebookId, page: firstPageId });
             } else {
-                dispatch({ type: "setPageId", payload: state.pageId });
+
+                dispatch({ type: "setPageId", payload: pageId });
             }
         };
 
         checkPages();
-    }, [state.pages, state.pageId]);
+    }, [state.pages, pageId]);
 
     const createNotebookPage = (page: Page) => {
         pageService.createPage(page);

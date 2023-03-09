@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HiTrash } from "react-icons/hi";
+import { HiPencil, HiTrash } from "react-icons/hi";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import { useNoteContext } from "../../contexts/noteCtx";
 import { usePageContext } from "../../contexts/pageCtx";
@@ -29,11 +29,17 @@ const Notes = () => {
                         </div>
                         <div className={scss["note-actions"]}>
                             <button
+                                id={scss.edit}
+                                onClick={() => deletePageNote(pageId, id)}
+                            >
+                                <HiPencil />
+                            </button>
+                            <button
                                 id={scss.delete}
                                 onClick={() => deletePageNote(pageId, id)}
                             >
                                 <HiTrash />
-                            </button>{" "}
+                            </button>
                             <p>{formatDate(createdAt)}</p>
                         </div>
                     </div>
