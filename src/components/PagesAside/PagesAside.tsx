@@ -26,7 +26,7 @@ const PagesAside = () => {
     const deleteNotebookPageHandler = (pageId: string) => () => {
         const prevPage = pages[pages.length - 2];
         deleteNotebookPageById(notebookId, pageId);
-        
+
         if (pages.length <= 1) {
             setSearchParams({ notebookId });
             return;
