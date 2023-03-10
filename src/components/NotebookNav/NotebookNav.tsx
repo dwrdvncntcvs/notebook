@@ -1,11 +1,12 @@
 import React from "react";
 import { MODAL, useModalContext } from "../../contexts/modalCtx";
 import scss from "./notebookNav.module.scss";
-import { HiPlus } from "react-icons/hi";
+import { HiPencil, HiPlus, HiTrash } from "react-icons/hi";
 import CreateModal from "../CreateNotebook/CreateModal";
 import { useNotebookContext } from "../../contexts/notebookCtx";
-import { HiX } from "react-icons/hi";
 import { useSearchParams } from "react-router-dom";
+import { getDataPreviousValue } from "../../utils/helper";
+import { Notebook } from "../../models/Notebook";
 
 const NotebookNav = () => {
     const { name, openModal } = useModalContext()!;
@@ -18,7 +19,7 @@ const NotebookNav = () => {
     };
 
     const deleteNotebookAction = (id: string) => {
-        const prevNotebook = notebooks[notebooks.length - 2];
+        const prevNotebook = getDataPreviousValue<Notebook>(id, notebooks);
         deleteNotebook(id);
         if (notebooks.length <= 1) {
             setSearchParams({});
@@ -47,12 +48,22 @@ const NotebookNav = () => {
                         {name}
                     </div>
                     <button
+                        id={scss.edit}
                         hidden={notebookId !== id}
                         onClick={() => {
                             deleteNotebookAction(id);
                         }}
                     >
-                        <HiX />
+                        <HiPencil />
+                    </button>
+                    <button
+                        id={scss.delete}
+                        hidden={notebookId !== id}
+                        onClick={() => {
+                            deleteNotebookAction(id);
+                        }}
+                    >
+                        <HiTrash />
                     </button>
                 </div>
             ))}

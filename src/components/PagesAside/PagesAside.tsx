@@ -4,6 +4,8 @@ import { useSearchParams } from "react-router-dom";
 import { MODAL, useModalContext } from "../../contexts/modalCtx";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import { usePageContext } from "../../contexts/pageCtx";
+import { Page } from "../../models/Page";
+import { getDataPreviousValue } from "../../utils/helper";
 import CreatePage from "../CreatePage/CreatePage";
 import scss from "./pagesAside.module.scss";
 
@@ -24,7 +26,7 @@ const PagesAside = () => {
         };
 
     const deleteNotebookPageHandler = (pageId: string) => () => {
-        const prevPage = pages[pages.length - 2];
+        const prevPage = getDataPreviousValue<Page>(pageId, pages);
         deleteNotebookPageById(notebookId, pageId);
 
         if (pages.length <= 1) {
