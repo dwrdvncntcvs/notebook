@@ -1,17 +1,6 @@
 import { Page } from "../models/Page";
+import { PageDictionary, PageInterface } from "../types/services";
 import { NoteService } from "./note";
-
-interface PageDictionary {
-    [key: string]: Page[];
-}
-
-interface PageInterface {
-    getAllPages: () => PageDictionary;
-    getAllNotebookPage: (notebookId: string) => Page[];
-    createPage: (page: Page) => void;
-    deletePageByNotebookId: (notebookId: string) => void;
-    deleteNotebookPageByPageId: (notebookId: string, pageId: string) => void;
-}
 
 export default class PageService implements PageInterface {
     private noteService: NoteService;

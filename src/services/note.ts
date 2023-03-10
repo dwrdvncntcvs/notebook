@@ -1,17 +1,5 @@
 import Note from "../models/Note";
-
-interface NoteDictionary {
-    [key: string]: Note[];
-}
-
-interface NoteInterface {
-    getAllPageNotes: (pageId: string) => Note[];
-    getAllNotes: () => NoteDictionary;
-    createNote: (note: Note) => void;
-    deleteNoteByPageId: (pageId: string) => void;
-    deletePageNoteById: (pageId: string, noteId: string) => void;
-    updatePageNoteById: (pageId: string, note: Note) => void;
-}
+import { NoteDictionary, NoteInterface } from "../types/services";
 
 export class NoteService implements NoteInterface {
     private n = "notes";

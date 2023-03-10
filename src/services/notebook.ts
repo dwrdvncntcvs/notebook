@@ -1,11 +1,7 @@
 import { Notebook } from "../models/Notebook";
+import { NotebookInterface } from "../types/services";
 import PageService from "./page";
 
-interface NotebookInterface {
-    getAll: () => Notebook[];
-    create: (notebook: Notebook) => void;
-    delete: (notebookId: string) => void;
-}
 
 export default class NotebookService implements NotebookInterface {
     private n = "notebooks";
