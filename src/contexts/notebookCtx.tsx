@@ -10,14 +10,7 @@ import {
 import { useSearchParams } from "react-router-dom";
 import { Notebook } from "../models/Notebook";
 import NotebookService from "../services/notebook";
-
-interface NotebookData {
-    notebooks: Notebook[];
-    createNotebook: (notebook: Notebook) => void;
-    deleteNotebook: (id: string) => void;
-    selectNotebook: (id: string) => void;
-    notebookId: string;
-}
+import { Action, NotebookData, NotebookState } from "../types/notebookCtx";
 
 const notebookData: NotebookData = {
     notebooks: [],
@@ -26,29 +19,6 @@ const notebookData: NotebookData = {
     selectNotebook(id: string) {},
     notebookId: "",
 };
-
-interface NotebookState {
-    notebooks: Notebook[];
-    notebookId: string;
-}
-
-type Action =
-    | {
-          type: "setNotebooks";
-          payload: Notebook[];
-      }
-    | {
-          type: "setNotebookId";
-          payload: string;
-      }
-    | {
-          type: "addNotebook";
-          payload: Notebook;
-      }
-    | {
-          type: "deleteNotebook";
-          payload: string;
-      };
 
 const notebookState: NotebookState = {
     notebooks: [],

@@ -10,6 +10,7 @@ import {
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Note from "../models/Note";
 import { NoteService } from "../services/note";
+import { Action, NoteData, NoteState } from "../types/noteCtx";
 
 const defaultNote: Note = {
     id: "",
@@ -18,17 +19,6 @@ const defaultNote: Note = {
     pageId: "",
     updatedAt: new Date(),
 };
-interface NoteData {
-    notes: Note[];
-    noteId: string;
-    pageId: string;
-    selectedNote: Note;
-    createPageNote: (note: Note) => void;
-    deletePageNote: (pageId: string, noteId: string) => void;
-    selectNote: (note: Note) => void;
-    unSelectNote: (noteId: string) => void;
-    updateNote: (pageId: string, note: Note) => void;
-}
 
 const noteData: NoteData = {
     notes: [],
@@ -41,43 +31,6 @@ const noteData: NoteData = {
     unSelectNote: (noteId: string) => {},
     updateNote: (pageId: string, note: Note) => {},
 };
-
-interface NoteState {
-    notes: Note[];
-    selectedNote: Note;
-    pageId: string;
-    noteId: string;
-}
-
-type Action =
-    | {
-          type: "setNote";
-          payload: Note[];
-      }
-    | {
-          type: "setPageId";
-          payload: string;
-      }
-    | {
-          type: "createNote";
-          payload: Note;
-      }
-    | {
-          type: "deleteNote";
-          payload: string;
-      }
-    | {
-          type: "setNoteId";
-          payload: string;
-      }
-    | {
-          type: "setSelectedNote";
-          payload: Note;
-      }
-    | {
-          type: "updateNote";
-          payload: Note;
-      };
 
 const noteReducer = (state: NoteState, action: Action) => {
     switch (action.type) {

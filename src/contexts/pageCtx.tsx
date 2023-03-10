@@ -10,14 +10,7 @@ import {
 import { useSearchParams } from "react-router-dom";
 import { Page } from "../models/Page";
 import PageService from "../services/page";
-
-interface PageData {
-    pages: Page[];
-    createNotebookPage: (page: Page) => void;
-    pageId: string;
-    deleteNotebookPageById: (notebookId: string, pageId: string) => void;
-    selectPage: (pageId: string) => void;
-}
+import { Action, PageData, PageState } from "../types/pageCtx";
 
 const pageData: PageData = {
     pages: [],
@@ -26,29 +19,6 @@ const pageData: PageData = {
     deleteNotebookPageById: (notebookId: string, pageId: string) => {},
     selectPage: (pageId: string) => {},
 };
-
-interface PageState {
-    pages: Page[];
-    pageId: string;
-}
-
-type Action =
-    | {
-          type: "setPages";
-          payload: Page[];
-      }
-    | {
-          type: "setPageId";
-          payload: string;
-      }
-    | {
-          type: "createPage";
-          payload: Page;
-      }
-    | {
-          type: "deletePage";
-          payload: string;
-      };
 
 const pageState = {
     pages: [],
