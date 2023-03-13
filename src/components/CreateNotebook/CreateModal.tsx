@@ -3,21 +3,16 @@ import { toast } from "react-toastify";
 import { useModalContext } from "../../contexts/modalCtx";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import Modal from "../../layouts/Modal/Modal";
+import ModalHeader from "../../layouts/ModalHeader/ModalHeader";
+import ModalNameActionForm from "../../layouts/ModalNameActionForm/ModalNameActionForm";
 import { Notebook } from "../../models/Notebook";
-import scss from "./createModal.module.scss";
 
-const Header = () => {
-    return (
-        <div className={scss.header}>
-            <h2>Notebook</h2>
-        </div>
-    );
-};
-
-const Body = () => {
+const CreateModal = () => {
     const [notebookName, setNotebookName] = useState("");
     const { createNotebook } = useNotebookContext();
     const { closeModal } = useModalContext()!;
+
+    const title = "Notebook";
 
     const submitHandler = (e: FormEvent) => {
         e.preventDefault();
@@ -35,22 +30,20 @@ const Body = () => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setNotebookName(e.target.value);
     };
-
     return (
-        <form className={scss.form} onSubmit={submitHandler}>
-            <input
-                type="text"
-                placeholder="Enter Notebook name..."
-                onChange={handleChange}
-                value={notebookName}
-            />
-            <button type="submit">Create Notebook</button>
-        </form>
+        <Modal
+            header={<ModalHeader title={title} />}
+            body={
+                <ModalNameActionForm
+                    onChange={handleChange}
+                    value={notebookName}
+                    onSubmit={submitHandler}
+                    actionType={"Create"}
+                    title={title}
+                />
+            }
+        />
     );
-};
-
-const CreateModal = () => {
-    return <Modal header={<Header />} body={<Body />} />;
 };
 
 export default CreateModal;
