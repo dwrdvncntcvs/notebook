@@ -1,5 +1,5 @@
-import React, { SyntheticEvent } from "react";
-import { HiOutlineTrash, HiPlus } from "react-icons/hi";
+import React, { SyntheticEvent, useState } from "react";
+import { HiOutlineTrash, HiPlus, HiDotsHorizontal } from "react-icons/hi";
 import { useSearchParams } from "react-router-dom";
 import { MODAL, useModalContext } from "../../contexts/modalCtx";
 import { useNotebookContext } from "../../contexts/notebookCtx";
@@ -9,7 +9,13 @@ import { getDataPreviousValue } from "../../utils/helper";
 import CreatePage from "../CreatePage/CreatePage";
 import scss from "./pagesAside.module.scss";
 
+const defaultToggle = {
+    value: "",
+    is: false,
+};
+
 const PagesAside = () => {
+    const [toggle, setToggle] = useState(defaultToggle);
     const { openModal, name } = useModalContext()!;
     const { pages, pageId, deleteNotebookPageById, selectPage } =
         usePageContext();
@@ -56,12 +62,29 @@ const PagesAside = () => {
                             >
                                 {name}
                             </div>
-                            <button
+                            <div
+                                id={scss["option-toggle"]}
                                 hidden={pageId !== id}
-                                onClick={deleteNotebookPageHandler(id)}
+                                onClick={() =>
+                                    setToggle({ is: true, value: id })
+                                }
+                                onMouseLeave={() => setToggle(defaultToggle)}
                             >
-                                <HiOutlineTrash />
-                            </button>
+                                <HiDotsHorizontal />
+                                {toggle.is && toggle.value === id ? (
+                                    <div className={scss.actions}>
+                                        <button id={scss.edit}>Edit</button>
+                                        <button
+                                            id={scss.delete}
+                                            onClick={deleteNotebookPageHandler(
+                                                id
+                                            )}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                ) : null}
+                            </div>
                         </div>
                     ))
                 ) : (

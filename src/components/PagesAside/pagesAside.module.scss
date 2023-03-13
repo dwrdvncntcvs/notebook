@@ -14,6 +14,7 @@
         position: relative;
         width: 100%;
         border: none;
+        user-select: none;
 
         .page-content {
             width: 95%;
@@ -28,7 +29,7 @@
             color: white;
         }
 
-        button {
+        #option-toggle {
             padding: 0;
             position: absolute;
             right: 10px;
@@ -47,7 +48,32 @@
             transition: all ease 0.2s;
 
             &:hover {
-                color: $danger;
+                color: $grid-border-color;
+            }
+
+            .actions {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                right: -100%;
+                transform: translateX(50%);
+                background-color: white;
+                width: 150px;
+                top: -7px;
+                border: 2px solid $grid-border-color;
+                border-radius: 5px;
+
+                button {
+                    background-color: white;
+                    border: none;
+                    padding: 5px;
+                    transition: all ease 0.2s;
+                    border-radius: 3px;
+
+                    &:hover {
+                        background-color: lightgray;
+                    }
+                }
             }
         }
     }
