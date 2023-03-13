@@ -5,16 +5,12 @@ import { useNotebookContext } from "../../contexts/notebookCtx";
 import Modal from "../../layouts/Modal/Modal";
 import ModalHeader from "../../layouts/ModalHeader/ModalHeader";
 import ModalNameActionForm from "../../layouts/ModalNameActionForm/ModalNameActionForm";
-import { Notebook } from "../../models/Notebook";
 
-interface UpdateNotebookProps {
-    notebook: Notebook;
-}
-
-const UpdateNotebook: FC<UpdateNotebookProps> = ({ notebook }) => {
+const UpdateNotebook: FC = () => {
     const title = "Update Notebook";
+    const { props } = useModalContext()!;
 
-    const [notebookName, setNotebookName] = useState(notebook.name);
+    const [notebookName, setNotebookName] = useState(props.name);
     const { updateNotebook } = useNotebookContext();
     const { closeModal } = useModalContext()!;
 
@@ -24,7 +20,7 @@ const UpdateNotebook: FC<UpdateNotebookProps> = ({ notebook }) => {
             toast.error("You cannot update the notebook with empty name");
             return;
         }
-        updateNotebook(notebook.id, notebookName);
+        updateNotebook(props.id, notebookName);
         closeModal();
     };
 

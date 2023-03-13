@@ -55,7 +55,7 @@ const NotebookNav = () => {
                         hidden={notebookId !== id}
                         onClick={() => {
                             // deleteNotebookAction(id);
-                            openModal(MODAL.UPDATE_NOTEBOOK);
+                            openModal(MODAL.UPDATE_NOTEBOOK, { id, name });
                         }}
                     >
                         <HiPencil />
@@ -71,7 +71,7 @@ const NotebookNav = () => {
                     </button>
                     {modalName === MODAL.UPDATE_NOTEBOOK &&
                     id === notebookId ? (
-                        <UpdateNotebook notebook={{ id, name }} />
+                        <UpdateNotebook />
                     ) : null}
                 </div>
             ))}
