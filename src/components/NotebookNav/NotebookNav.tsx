@@ -7,9 +7,10 @@ import { useNotebookContext } from "../../contexts/notebookCtx";
 import { useSearchParams } from "react-router-dom";
 import { getDataPreviousValue } from "../../utils/helper";
 import { Notebook } from "../../models/Notebook";
+import UpdateNotebook from "../UpdateNotebook/UpdateNotebook";
 
 const NotebookNav = () => {
-    const { name, openModal } = useModalContext()!;
+    const { name: modalName, openModal } = useModalContext()!;
     const { notebooks, notebookId, deleteNotebook, selectNotebook } =
         useNotebookContext();
     const [_, setSearchParams] = useSearchParams();
@@ -43,7 +44,9 @@ const NotebookNav = () => {
                     <div
                         className={scss["notebook-tab-item"]}
                         id={scss["note-title"]}
-                        onClick={() => selectNotebook(id)}
+                        onClick={() => {
+                            selectNotebook(id);
+                        }}
                     >
                         {name}
                     </div>
@@ -51,7 +54,8 @@ const NotebookNav = () => {
                         id={scss.edit}
                         hidden={notebookId !== id}
                         onClick={() => {
-                            deleteNotebookAction(id);
+                            // deleteNotebookAction(id);
+                            openModal(MODAL.UPDATE_NOTEBOOK);
                         }}
                     >
                         <HiPencil />
@@ -65,10 +69,14 @@ const NotebookNav = () => {
                     >
                         <HiTrash />
                     </button>
+                    {modalName === MODAL.UPDATE_NOTEBOOK &&
+                    id === notebookId ? (
+                        <UpdateNotebook notebook={{ id, name }} />
+                    ) : null}
                 </div>
             ))}
 
-            {name === MODAL.CREATE_NOTEBOOK ? <CreateModal /> : null}
+            {modalName === MODAL.CREATE_NOTEBOOK ? <CreateModal /> : null}
         </nav>
     );
 };

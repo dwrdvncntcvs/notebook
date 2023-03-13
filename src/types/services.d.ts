@@ -15,6 +15,7 @@ interface NotebookInterface {
     getAll: () => Notebook[];
     create: (notebook: Notebook) => void;
     delete: (notebookId: string) => void;
+    update: (id: string, name: string) => void;
 }
 
 interface PageDictionary {

@@ -17,6 +17,7 @@ const notebookData: NotebookData = {
     createNotebook(notebook: Notebook) {},
     deleteNotebook(id: string) {},
     selectNotebook(id: string) {},
+    updateNotebook(id: string, name: string) {},
     notebookId: "",
 };
 
@@ -43,6 +44,16 @@ const notebookReducer = (state: NotebookState, action: Action) => {
                     ({ id }) => id !== action.payload
                 ),
             };
+        case "updateNotebook": {
+            return {
+                ...state,
+                notebooks: state.notebooks.map((notebook) =>
+                    notebook.id === action.payload.id
+                        ? { ...notebook, name: action.payload.name }
+                        : notebook
+                ),
+            };
+        }
         default:
             return state;
     }
@@ -91,6 +102,11 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
         setSearchParams({ notebookId: id });
     };
 
+    const updateNotebook = (id: string, name: string) => {
+        notebookService.update(id, name);
+        dispatch({ type: "updateNotebook", payload: { id, name } });
+    };
+
     return (
         <NotebookContext.Provider
             value={{
@@ -98,6 +114,7 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
                 createNotebook,
                 deleteNotebook,
                 selectNotebook,
+                updateNotebook,
             }}
         >
             {children}

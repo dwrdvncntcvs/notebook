@@ -5,6 +5,7 @@ interface NotebookData {
     createNotebook: (notebook: Notebook) => void;
     deleteNotebook: (id: string) => void;
     selectNotebook: (id: string) => void;
+    updateNotebook: (id: string, name: string) => void;
     notebookId: string;
 }
 
@@ -29,6 +30,10 @@ type Action =
     | {
           type: "deleteNotebook";
           payload: string;
+      }
+    | {
+          type: "updateNotebook";
+          payload: { id: string; name: string };
       };
 
 export { NotebookData, Action, NotebookState };

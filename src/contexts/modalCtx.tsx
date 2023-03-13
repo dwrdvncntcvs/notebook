@@ -41,6 +41,7 @@ const useModalContext = () => {
 const MODAL = {
     CREATE_NOTEBOOK: "createNotebook",
     CREATE_PAGE: "createPage",
+    UPDATE_NOTEBOOK: "updateNotebook"
 };
 
 export { ModalContext, ModalProvider, useModalContext, MODAL };
