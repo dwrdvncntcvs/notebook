@@ -18,6 +18,7 @@ const pageData: PageData = {
     pageId: "",
     deleteNotebookPageById: (notebookId: string, pageId: string) => {},
     selectPage: (pageId: string) => {},
+    updateNotebookPage: (notebookId: string, page: Page) => {},
 };
 
 const pageState = {
@@ -37,6 +38,13 @@ const pageReducer = (state: PageState, action: Action) => {
             return {
                 ...state,
                 pages: state.pages.filter(({ id }) => id !== action.payload),
+            };
+        case "updatePage":
+            return {
+                ...state,
+                pages: state.pages.map((page) =>
+                    page.id === action.payload.id ? { ...action.payload } : page
+                ),
             };
         default:
             return state;
@@ -100,6 +108,11 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         setSearchParams({ notebookId, page: pageId });
     };
 
+    const updateNotebookPage = (notebookId: string, page: Page) => {
+        pageService.updateNotebookPageById(notebookId, page);
+        dispatch({ type: "updatePage", payload: page });
+    };
+
     return (
         <PageContext.Provider
             value={{
@@ -107,6 +120,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
                 createNotebookPage,
                 deleteNotebookPageById,
                 selectPage,
+                updateNotebookPage,
             }}
         >
             {children}

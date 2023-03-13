@@ -6,6 +6,7 @@ interface PageData {
     pageId: string;
     deleteNotebookPageById: (notebookId: string, pageId: string) => void;
     selectPage: (pageId: string) => void;
+    updateNotebookPage: (notebookId: string, page: Page) => void;
 }
 interface PageState {
     pages: Page[];
@@ -28,6 +29,10 @@ type Action =
     | {
           type: "deletePage";
           payload: string;
+      }
+    | {
+          type: "updatePage";
+          payload: Page;
       };
 
 export { PageData, PageState, Action };
