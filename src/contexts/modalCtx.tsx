@@ -59,6 +59,7 @@ const MODAL = {
     CREATE_NOTEBOOK: "createNotebook",
     CREATE_PAGE: "createPage",
     UPDATE_NOTEBOOK: "updateNotebook",
+    UPDATE_PAGE: "updatePage",
 };
 
 export { ModalContext, ModalProvider, useModalContext, MODAL };

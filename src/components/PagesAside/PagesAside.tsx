@@ -5,8 +5,10 @@ import { MODAL, useModalContext } from "../../contexts/modalCtx";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import { usePageContext } from "../../contexts/pageCtx";
 import { Page } from "../../models/Page";
+import { PageUpdateProps } from "../../types/modalCtx";
 import { getDataPreviousValue } from "../../utils/helper";
 import CreatePage from "../CreatePage/CreatePage";
+import UpdatePage from "../UpdatePage/UpdatePage";
 import scss from "./pagesAside.module.scss";
 
 const defaultToggle = {
@@ -43,6 +45,10 @@ const PagesAside = () => {
         selectPage(prevPage.id);
     };
 
+    const openUpdateModal = (props: PageUpdateProps) => () => {
+        openModal(MODAL.UPDATE_PAGE, props);
+    };
+
     return (
         <aside className={notebooks.length === 0 ? scss.hidden : ""}>
             <div className={scss["aside-header"]}>
@@ -52,7 +58,7 @@ const PagesAside = () => {
             </div>
             <div className={scss.pages}>
                 {pages.length > 0 ? (
-                    pages.map(({ id, name }) => (
+                    pages.map(({ id, name, notebookId }) => (
                         <div className={`${scss.page} `} key={id}>
                             <div
                                 className={`${scss["page-content"]} ${
@@ -73,7 +79,16 @@ const PagesAside = () => {
                                 <HiDotsHorizontal />
                                 {toggle.is && toggle.value === id ? (
                                     <div className={scss.actions}>
-                                        <button id={scss.edit}>Edit</button>
+                                        <button
+                                            id={scss.edit}
+                                            onClick={openUpdateModal({
+                                                id,
+                                                name,
+                                                notebookId,
+                                            })}
+                                        >
+                                            Edit
+                                        </button>
                                         <button
                                             id={scss.delete}
                                             onClick={deleteNotebookPageHandler(
@@ -96,6 +111,7 @@ const PagesAside = () => {
                 )}
             </div>
 
+            {name === MODAL.UPDATE_PAGE ? <UpdatePage /> : null}
             {name === MODAL.CREATE_PAGE ? <CreatePage /> : null}
         </aside>
     );
