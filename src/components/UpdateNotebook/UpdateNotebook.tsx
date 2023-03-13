@@ -1,42 +1,51 @@
-import React, { FC, useState, FormEvent } from "react";
+import React, { FC, useState, FormEvent, ChangeEvent } from "react";
+import { toast } from "react-toastify";
+import { useModalContext } from "../../contexts/modalCtx";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import Modal from "../../layouts/Modal/Modal";
+import ModalHeader from "../../layouts/ModalHeader/ModalHeader";
+import ModalNameActionForm from "../../layouts/ModalNameActionForm/ModalNameActionForm";
 import { Notebook } from "../../models/Notebook";
 
 interface UpdateNotebookProps {
     notebook: Notebook;
 }
 
-interface BodyProps extends UpdateNotebookProps {}
+const UpdateNotebook: FC<UpdateNotebookProps> = ({ notebook }) => {
+    const title = "Update Notebook";
 
-const Header = () => {
-    return <h2>Update Notebook</h2>;
-};
-
-const Body: FC<BodyProps> = ({ notebook }) => {
     const [notebookName, setNotebookName] = useState(notebook.name);
     const { updateNotebook } = useNotebookContext();
+    const { closeModal } = useModalContext()!;
 
     const submitHandler = (e: FormEvent) => {
         e.preventDefault();
-        console.log("New Notebook name: ", notebookName);
+        if (!notebookName) {
+            toast.error("You cannot update the notebook with empty name");
+            return;
+        }
         updateNotebook(notebook.id, notebookName);
+        closeModal();
+    };
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setNotebookName(e.target.value);
     };
 
     return (
-        <form onSubmit={submitHandler}>
-            <input
-                type="text"
-                value={notebookName}
-                onChange={(e) => setNotebookName(e.target.value)}
-            />
-            <button type="submit">Update Notebook</button>
-        </form>
+        <Modal
+            header={<ModalHeader title={title} />}
+            body={
+                <ModalNameActionForm
+                    actionType="Update"
+                    onChange={handleChange}
+                    onSubmit={submitHandler}
+                    title={title}
+                    value={notebookName}
+                />
+            }
+        />
     );
-};
-
-const UpdateNotebook: FC<UpdateNotebookProps> = ({ notebook }) => {
-    return <Modal header={<Header />} body={<Body notebook={notebook} />} />;
 };
 
 export default UpdateNotebook;
