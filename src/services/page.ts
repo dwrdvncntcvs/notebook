@@ -64,4 +64,16 @@ export default class PageService implements PageInterface {
         pages[notebookId] = filteredNotebookPages;
         localStorage.setItem("pages", JSON.stringify({ ...pages }));
     }
+
+    updateNotebookPageById(notebookId: string, page: Page) {
+        const allPages = this.getAllPages();
+        const allNotebookPages = this.getAllNotebookPage(notebookId);
+
+        const updatedNotebookPages = allNotebookPages.map((p) =>
+            p.id === page.id ? page : p
+        );
+
+        allPages[notebookId] = updatedNotebookPages;
+        localStorage.setItem("pages", JSON.stringify(allPages));
+    }
 }

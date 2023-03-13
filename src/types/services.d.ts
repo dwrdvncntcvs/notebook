@@ -1,3 +1,5 @@
+import { Page } from "../models/Page";
+
 interface NoteDictionary {
     [key: string]: Note[];
 }
@@ -28,6 +30,7 @@ interface PageInterface {
     createPage: (page: Page) => void;
     deletePageByNotebookId: (notebookId: string) => void;
     deleteNotebookPageByPageId: (notebookId: string, pageId: string) => void;
+    updateNotebookPageById: (notebookId: string, page: Page) => void;
 }
 
 export {
