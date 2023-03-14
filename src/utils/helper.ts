@@ -18,7 +18,14 @@ function getDataPreviousValue<T extends { id: string }>(
 
     const currentIndex = values.findIndex((value) => value.id === id);
     const previousObj = values[currentIndex - 1];
-    return previousObj;
+    const nextObj = values[currentIndex + 1];
+
+    // This will check first if previous object is falsy
+    // If note: It will return previous object
+    // If it is: It will going to check if next object is falsy
+    // If it is: It will return previous object
+    // If not: It will return next object
+    return !previousObj ? (!nextObj ? previousObj : nextObj) : previousObj;
 }
 
 export { formatDate, getDataPreviousValue };
