@@ -4,6 +4,7 @@ const express = require("express");
 const eGql = require("express-graphql");
 const cors = require("cors");
 const { mongoDbConnect } = require("./model/config");
+const { schema } = require("./graphql/schema");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -15,7 +16,7 @@ app.use(express.json());
 app.use(
     "/graphql",
     eGql.graphqlHTTP({
-        schema: [],
+        schema,
         graphiql: true,
     })
 );
