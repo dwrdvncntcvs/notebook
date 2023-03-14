@@ -1,0 +1,63 @@
+@import "../../variables.scss";
+
+.notebook-tab {
+    font-size: 1.2rem;
+    transform: translateY(2px) translateX(20px);
+    border: 2px solid lightgray;
+    border-bottom: 2px solid white;
+    border-radius: 10px 10px 0px 0px;
+    border: none;
+    transition: all ease 0.05s;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .notebook-tab-item {
+        padding: 5px 30px;
+        z-index: 1;
+    }
+
+    button {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        pointer-events: fill;
+        vertical-align: middle;
+        line-height: 33px;
+        border: none;
+        color: $danger;
+        border-radius: 5px;
+        background-color: transparent;
+        font-size: 16px;
+        border-radius: 10px;
+        transition: all ease 0.2s;
+        color: gray;
+    }
+
+    #edit:hover {
+        color: $warning;
+    }
+
+    #delete:hover {
+        color: $danger;
+    }
+}
+
+.active {
+    font-size: 1.2rem;
+    transform: translateY(2px) translateX(20px);
+    border: 2px solid lightgray;
+    border-bottom: 2px solid white;
+    background-color: white;
+    border-radius: 10px 10px 0px 0px;
+    user-select: none;
+    pointer-events: none;
+    padding: 0px 10px;
+
+    .notebook-tab-item {
+        padding: 5px 10px;
+    }
+}
