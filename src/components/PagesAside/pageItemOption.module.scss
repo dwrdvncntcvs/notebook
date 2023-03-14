@@ -1,0 +1,49 @@
+@import "../../variables.scss";
+
+#option-toggle {
+    padding: 0;
+    position: absolute;
+    right: 10px;
+    font-size: 1.25rem;
+    vertical-align: middle;
+    line-height: 35px;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    background-color: transparent;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all ease 0.2s;
+
+    &:hover {
+        color: $grid-border-color;
+    }
+
+    .actions {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        right: -100%;
+        transform: translateX(50%);
+        background-color: white;
+        width: 150px;
+        top: -7px;
+        border: 2px solid $grid-border-color;
+        border-radius: 5px;
+
+        button {
+            background-color: white;
+            border: none;
+            padding: 5px;
+            transition: all ease 0.2s;
+            border-radius: 3px;
+
+            &:hover {
+                background-color: lightgray;
+            }
+        }
+    }
+}
