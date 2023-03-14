@@ -4,67 +4,6 @@
     h2 {
         margin: 20px;
     }
-
-    .note {
-        margin: 0;
-        padding: 20px;
-        display: flex;
-        flex-direction: row;
-        position: relative;
-
-        .note-content {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            p {
-                margin: 0;
-                white-space: pre-line;
-                padding: 20px 0px;
-            }
-        }
-
-        .note-actions {
-            width: 200px;
-            text-align: end;
-            position: relative;
-
-            p {
-                font-size: 0.75rem;
-                margin: 0;
-                position: absolute;
-                right: 0px;
-                bottom: 0px;
-            }
-
-            button {
-                width: 30px;
-                height: 30px;
-                line-height: 30px;
-                margin-right: 5px;
-                color: gray;
-                background-color: transparent;
-                font-size: 1.1rem;
-                transition: all ease 0.2s;
-                border: 1px solid transparent;
-                border-radius: 10px;
-            }
-
-            #delete:hover,
-            #cancel:hover {
-                color: $danger;
-                border-color: $danger;
-            }
-
-            #edit:hover {
-                color: $warning;
-                border-color: $warning;
-            }
-        }
-
-        &:nth-child(even) {
-            background-color: rgb(234, 234, 234);
-        }
-    }
 }
 
 .main-max-height {

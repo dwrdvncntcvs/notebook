@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { INoteAction } from "./Notes";
+import { INoteAction } from "./NoteItem";
 import scss from "./notesAction.module.scss";
 
 interface NotesActionProps {
