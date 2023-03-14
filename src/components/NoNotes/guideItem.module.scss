@@ -1,0 +1,33 @@
+@import "../../variables.scss";
+
+.guide-item {
+    padding: 20px 10px 10px 10px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+
+    .guide-header {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+
+        .icon {
+            font-size: 3rem;
+        }
+    }
+
+    .guide-desc {
+        padding: 10px;
+        width: 300px;
+
+        p {
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            background-color: $grid-border-color;
+        }
+    }
+}

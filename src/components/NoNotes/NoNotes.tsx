@@ -5,9 +5,17 @@ import {
     HiOutlineDocument,
     HiOutlinePencil,
 } from "react-icons/hi";
+import { IconType } from "react-icons";
+import GuideItem from "./GuideItem";
+
+export interface Guides {
+    Icon: IconType;
+    title: string;
+    descriptions: string[];
+}
 
 const NoNotes = () => {
-    const guide = [
+    const guide: Guides[] = [
         {
             Icon: HiOutlineBookOpen,
             title: "Notebook",
@@ -23,7 +31,7 @@ const NoNotes = () => {
             descriptions: [
                 "Create a notebook page",
                 "You cannot create a notes with out a page",
-                "This will serve as your actual notebook page"
+                "This will serve as your actual notebook page",
             ],
         },
         {
@@ -32,7 +40,7 @@ const NoNotes = () => {
             descriptions: [
                 "You can save any notes you want",
                 "Currently this only save notes and not images or other media",
-                "The notes you will write will only be seen by you"
+                "The notes you will write will only be seen by you",
             ],
         },
     ];
@@ -42,19 +50,7 @@ const NoNotes = () => {
             <h1>Getting Started</h1>
             <div className={scss["guide-list"]}>
                 {guide.map(({ Icon, title, descriptions }, i) => (
-                    <Fragment key={i}>
-                        <div className={scss["guide-item"]}>
-                            <div className={scss["guide-header"]}>
-                                <Icon className={scss.icon} />
-                                <h3>{title}</h3>
-                            </div>
-                            <div className={scss["guide-desc"]}>
-                                {descriptions.map((description, i) => (
-                                    <p key={i}>{description}</p>
-                                ))}
-                            </div>
-                        </div>
-                    </Fragment>
+                    <GuideItem key={i} guide={{ Icon, title, descriptions }} />
                 ))}
             </div>
         </div>
