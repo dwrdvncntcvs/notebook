@@ -4,6 +4,7 @@ import { MODAL, useModalContext } from "../../contexts/modalCtx";
 import { useNotebookContext } from "../../contexts/notebookCtx";
 import { usePageContext } from "../../contexts/pageCtx";
 import CreatePage from "../CreatePage/CreatePage";
+import NoPage from "../NoPage/NoPage";
 import UpdatePage from "../UpdatePage/UpdatePage";
 import PageItem from "./PageItem";
 import scss from "./pagesAside.module.scss";
@@ -28,11 +29,7 @@ const PagesAside = () => {
                 {pages.length > 0 ? (
                     pages.map((page) => <PageItem key={page.id} page={page} />)
                 ) : (
-                    <div id={scss["no-page"]}>
-                        {"No Pages".split("").map((char, i) => (
-                            <span key={i}>{char}</span>
-                        ))}
-                    </div>
+                   <NoPage />
                 )}
             </div>
 
