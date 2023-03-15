@@ -3,6 +3,13 @@ const { findAll } = require("../../model/Notebook");
 const typeDef = `
     type Query {
         notebooks(page: Int, limit: Int): PaginatedNotebook
+        pages(page:Int, limit: Int): PaginatedPages
+    }
+
+    type PaginatedMeta {
+        page: Int
+        count: Int
+        totalPages: Int
     }
 `;
 

@@ -15,14 +15,10 @@ const typeDefs = `
 
     type PaginatedNotebook {
         notebooks: [Notebook]
-        notebooksMeta: NotebooksMeta
+        notebooksMeta: PaginatedMeta
     }
 
-    type NotebooksMeta {
-        page: Int
-        count: Int
-        totalPages: Int
-    }
+    
 `;
 
 const resolvers = {
