@@ -19,23 +19,19 @@ const NotebookSchema = new Schema({
     },
     createdAt: {
         type: Date,
+        default: new Date(),
     },
     updatedAt: {
         type: Date,
+        default: new Date(),
     },
 });
 
 const Notebook = model("Notebook", NotebookSchema);
 
 const create = async (notebookData) => {
-    const data = {
-        ...notebookData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
-
     try {
-        const createdNotebook = await Notebook.create(data);
+        const createdNotebook = await Notebook.create(notebookData);
         return formatData(createdNotebook);
     } catch (err) {
         return errorHandler(err);
