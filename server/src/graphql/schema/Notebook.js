@@ -5,6 +5,11 @@ const typeDefs = `
         createdAt: String
         updatedAt: String
     }
+
+    type DeletedNotebook {
+        deleted: Boolean
+        message: String
+    }
 `;
 
 module.exports = {
