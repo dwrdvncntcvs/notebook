@@ -7,6 +7,22 @@ const formatData = (dataObj) => {
     return data;
 };
 
+const errorHandler = (err) => {
+    if (err.name === "ValidationError") {
+        let errors = [];
+
+        for (let field in err.errors) {
+            errors.push({
+                field,
+                message: err.errors[field].message,
+            });
+        }
+
+        return new Error(JSON.stringify(errors));
+    }
+};
+
 module.exports = {
     formatData,
+    errorHandler,
 };
