@@ -2,15 +2,16 @@ const { findAll } = require("../../model/Notebook");
 
 const typeDef = `
     type Query {
-        notebooks: [Notebook]
+        notebooks(page: Int, limit: Int): PaginatedNotebook
     }
 `;
 
 const resolvers = {
-    notebooks: async () => {
+    notebooks: async (_, args) => {
+        const { page, limit } = args;
         try {
-            const notebooks = await findAll();
-            return notebooks;
+            const notebook = await findAll(page, limit);
+            return notebook;
         } catch (err) {
             return err;
         }

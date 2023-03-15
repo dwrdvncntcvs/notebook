@@ -42,10 +42,28 @@ const create = async (notebookData) => {
     }
 };
 
-const findAll = async () => {
+const findAll = async (page = 1, limit = 10) => {
+    const currentPage = (page - 1) * limit;
     try {
-        const notebooksData = await Notebook.find();
-        return notebooksData.map((nb) => formatData(nb));
+        const notebooksData = await Notebook.find()
+            .skip(currentPage)
+            .limit(limit);
+
+        const totalNotebooks = await Notebook.count();
+        const totalPages = Math.ceil(totalNotebooks / limit);
+
+        const notebooksMeta = {
+            page: currentPage,
+            count: totalNotebooks,
+            totalPages: totalPages,
+        };
+
+        const notebookObj = {
+            notebooks: notebooksData.map((nb) => formatData(nb)),
+            notebooksMeta,
+        };
+
+        return notebookObj;
     } catch (err) {
         return errorHandler(err);
     }

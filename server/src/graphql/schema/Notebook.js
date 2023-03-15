@@ -10,6 +10,17 @@ const typeDefs = `
         deleted: Boolean
         message: String
     }
+
+    type PaginatedNotebook {
+        notebooks: [Notebook]
+        notebooksMeta: NotebooksMeta
+    }
+
+    type NotebooksMeta {
+        page: Int
+        count: Int
+        totalPages: Int
+    }
 `;
 
 module.exports = {
