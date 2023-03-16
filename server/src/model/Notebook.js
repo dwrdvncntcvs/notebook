@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, isValidObjectId } = require("mongoose");
 const { formatData, errorHandler } = require("./utils");
 
 const MIN_NAME = 5;
@@ -71,11 +71,18 @@ const update = async (notebookId, notebookData) => {
         updatedAt: new Date(),
     };
 
+    if (!isValidNotebookId(notebookId))
+        return new Error("Notebook doesn't exist");
+
     try {
+        const notebook = await Notebook.findOne({ _id: notebookId });
+
+        if (!isNotebookExist(notebookId))
+            return new Error("Notebook doesn't exist");
+
         await Notebook.updateOne({ _id: notebookId }, data, {
             runValidators: true,
         });
-        const notebook = await Notebook.findOne({ _id: notebookId });
 
         return formatData(notebook);
     } catch (err) {
@@ -84,8 +91,16 @@ const update = async (notebookId, notebookData) => {
 };
 
 const remove = async (notebookId) => {
+    if (isValidNotebookId(notebookId))
+        return new Error("Notebook doesn't exist");
+
     try {
         const notebook = await Notebook.findOne({ _id: notebookId });
+
+        if (isNotebookExist(notebookId)) {
+            return new Error("Notebook doesn't exist");
+        }
+
         await Notebook.deleteOne({ _id: notebookId });
         return {
             deleted: true,
@@ -96,10 +111,17 @@ const remove = async (notebookId) => {
     }
 };
 
+const isValidNotebookId = (notebookId) => isValidObjectId(notebookId);
+
+const isNotebookExist = async (notebookId) =>
+    (await Notebook.findOne({ _id: notebookId })) ? true : false;
+
 module.exports = {
     Notebook,
     create,
     findAll,
     update,
     remove,
+    isValidNotebookId,
+    isNotebookExist,
 };
