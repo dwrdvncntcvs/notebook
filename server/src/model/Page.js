@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, isValidObjectId } = require("mongoose");
+const { isValidNotebookId, isNotebookExist } = require("./Notebook");
 const { errorHandler, formatData } = require("./utils");
 
 const MIN_PAGE_NAME = 5;
@@ -36,7 +37,15 @@ const PageSchema = new Schema({
 const Page = model("Page", PageSchema);
 
 const create = async ({ notebookId, name }) => {
+    if (!isValidNotebookId(notebookId))
+        return new Error("Can't create a page because notebook doesn't exist");
+
     try {
+        if (!isNotebookExist(notebookId))
+            return new Error(
+                "Can't create a page because notebook doesn't exist"
+            );
+
         const createdPage = await Page.create({ notebookId, name });
         return formatData(createdPage);
     } catch (err) {
@@ -45,8 +54,14 @@ const create = async ({ notebookId, name }) => {
 };
 
 const findAll = async (notebookId, page = 1, limit = 10) => {
+    if (!isValidNotebookId(notebookId))
+        return new Error("Can't get pages because notebook doesn't exist");
+
     const currentPage = (page - 1) * limit;
     try {
+        if (!isNotebookExist(notebookId))
+            return new Error("Can't get pages because notebook doesn't exist");
+
         const pageData = await Page.find({ notebookId })
             .skip(currentPage)
             .limit(limit);
@@ -73,7 +88,11 @@ const findAll = async (notebookId, page = 1, limit = 10) => {
 };
 
 const update = async (id, { name }) => {
+    if (!isValidPageId(id)) return new Error("Page doesn't exist");
+
     try {
+        if (!isPageExist) return new Error("Page doesn't exist");
+
         await Page.updateOne({ _id: id }, { name }, { runValidators: true });
         const updatedPage = await Page.findOne({ _id: id });
 
@@ -84,7 +103,11 @@ const update = async (id, { name }) => {
 };
 
 const remove = async (id) => {
+    if (!isValidPageId(id)) return new Error("Page doesn't exist");
+
     try {
+        if (!isPageExist) return new Error("Page doesn't exist");
+
         const page = await Page.findOne({ _id: id });
         await Page.deleteOne({ _id: id });
 
@@ -96,6 +119,11 @@ const remove = async (id) => {
         return errorHandler(err);
     }
 };
+
+const isValidPageId = (pageId) => isValidObjectId(pageId);
+
+const isPageExist = async (pageId) =>
+    (await Page.findOne({ _id: pageId })) ? true : false;
 
 module.exports = {
     Page,
