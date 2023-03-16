@@ -8,17 +8,10 @@ const typeDefs = `
         updatedAt: String
     }
 
-    type DeletedNotebook {
-        deleted: Boolean
-        message: String
-    }
-
     type PaginatedNotebook {
         notebooks: [Notebook]
         notebooksMeta: PaginatedMeta
     }
-
-    
 `;
 
 const resolvers = {

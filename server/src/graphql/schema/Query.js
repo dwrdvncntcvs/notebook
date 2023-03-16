@@ -11,6 +11,11 @@ const typeDef = `
         count: Int
         totalPages: Int
     }
+
+    type DeletedMessage {
+        deleted: Boolean
+        message: String
+    }
 `;
 
 const resolvers = {
