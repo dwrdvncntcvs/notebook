@@ -26,7 +26,7 @@ const Notes = () => {
     return (
         <main className={`${scss.main} ${noPagesClass} ${noNotebooksClass} `}>
             {notes.length > 0 ? (
-                notes.map((note) => <NoteItem note={note} />)
+                notes.map((note) => <NoteItem key={note.id} note={note} />)
             ) : (
                 <NoNotes />
             )}

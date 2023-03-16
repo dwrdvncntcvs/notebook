@@ -9,7 +9,7 @@ const NavAction: FC<NavActionProps> = ({ navActionProperties }) => {
     return (
         <>
             {navActionProperties.map(({ id, hidden, action, Icon }) => (
-                <button id={id} hidden={hidden} onClick={action}>
+                <button key={id} id={id} hidden={hidden} onClick={action}>
                     <Icon />
                 </button>
             ))}

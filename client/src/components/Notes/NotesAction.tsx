@@ -11,7 +11,7 @@ const NotesAction: FC<NotesActionProps> = ({ notesActions }) => {
         <>
             {notesActions.map(({ Icon, action, id, isSelected }) =>
                 isSelected ? (
-                    <button id={id} onClick={action}>
+                    <button key={id} id={id} onClick={action}>
                         <Icon />
                     </button>
                 ) : null

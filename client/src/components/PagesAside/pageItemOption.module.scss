@@ -17,6 +17,7 @@
     top: 50%;
     transform: translateY(-50%);
     transition: all ease 0.2s;
+    z-index: 10;
 
     &:hover {
         color: $grid-border-color;
