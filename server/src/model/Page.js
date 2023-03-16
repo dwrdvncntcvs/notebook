@@ -44,13 +44,15 @@ const create = async ({ notebookId, name }) => {
     }
 };
 
-const findAll = async (page = 1, limit = 10) => {
+const findAll = async (notebookId, page = 1, limit = 10) => {
     const currentPage = (page - 1) * limit;
     try {
-        const pageData = await Page.find().skip(currentPage).limit(limit);
+        const pageData = await Page.find({ notebookId })
+            .skip(currentPage)
+            .limit(limit);
 
         const totalPagesCount = await Page.count();
-        const totalPages = Math.ceil(totalNotebooks / limit);
+        const totalPages = Math.ceil(totalPagesCount / limit);
 
         const pageMeta = {
             page: currentPage,
@@ -58,12 +60,13 @@ const findAll = async (page = 1, limit = 10) => {
             totalPages: totalPages,
         };
 
-        const notebookObj = {
+        const pageObj = {
+            id: notebookId,
             pages: pageData.map((p) => formatData(p)),
             pageMeta,
         };
 
-        return notebookObj;
+        return pageObj;
     } catch (err) {
         return errorHandler(err);
     }

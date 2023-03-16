@@ -1,9 +1,10 @@
-const { findAll } = require("../../model/Notebook");
+const nb = require("../../model/Notebook");
+const pg = require("../../model/Page");
 
 const typeDef = `
     type Query {
         notebooks(page: Int, limit: Int): PaginatedNotebook
-        pages(page:Int, limit: Int): PaginatedPages
+        pages(notebookId: String!,page:Int, limit: Int): PaginatedPages
     }
 
     type PaginatedMeta {
@@ -22,8 +23,17 @@ const resolvers = {
     notebooks: async (_, args) => {
         const { page, limit } = args;
         try {
-            const notebook = await findAll(page, limit);
-            return notebook;
+            const notebooks = await nb.findAll(page, limit);
+            return notebooks;
+        } catch (err) {
+            return err;
+        }
+    },
+    pages: async (_, args) => {
+        const { page, limit, notebookId } = args;
+        try {
+            const pages = await pg.findAll(notebookId, page, limit);
+            return pages;
         } catch (err) {
             return err;
         }

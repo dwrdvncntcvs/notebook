@@ -7,8 +7,8 @@ const typeDefs = `
         updateNotebook(id: String!, name: String): Notebook
         deleteNotebook(id: String): DeletedMessage
 
-        createPage(name: String): Page
-        updatePage(id: String!): Page
+        createPage(notebookId: String, name: String): Page
+        updatePage(id: String!, name: String): Page
         deletePage(id: String): DeletedMessage
     }
  `;
