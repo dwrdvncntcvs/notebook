@@ -1,5 +1,9 @@
 import { v4 } from "uuid";
 
+export interface INote {
+    [key: string]: Note[];
+}
+
 export default class Note {
     id: string;
     note: string;

@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Notebook } from "../models/Notebook";
+import DataService from "../services/DataService";
 import NotebookService from "../services/notebook";
 import { Action, NotebookData, NotebookState } from "../types/notebookCtx";
 
@@ -65,11 +66,12 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(notebookReducer, notebookState);
     const [searchParams, setSearchParams] = useSearchParams();
     const notebookService = new NotebookService();
+    const dataService = new DataService<Notebook>("notebooks");
 
     const notebookId = searchParams.get("notebookId") as string;
 
     const getAllNotebooks = useCallback(() => {
-        const notebooks = notebookService.getAll();
+        const notebooks = dataService.getAll();
         dispatch({ type: "setNotebooks", payload: notebooks });
     }, []);
 
@@ -86,7 +88,7 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
     }, [notebookId]);
 
     const createNotebook = (notebook: Notebook) => {
-        notebookService.create(notebook);
+        dataService.create(notebook);
         dispatch({ type: "setNotebookId", payload: notebook.id });
         dispatch({ type: "addNotebook", payload: notebook });
         setSearchParams({ notebookId: notebook.id });
@@ -103,7 +105,7 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
     };
 
     const updateNotebook = (id: string, name: string) => {
-        notebookService.update(id, name);
+        dataService.update(id, name);
         dispatch({ type: "updateNotebook", payload: { id, name } });
     };
 

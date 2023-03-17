@@ -1,5 +1,9 @@
 import { v4 } from "uuid";
 
+export interface IPage {
+    [key: string]: Page[]
+}
+
 export class Page {
     id: string;
     name: string;

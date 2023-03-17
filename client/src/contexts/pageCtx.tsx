@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Page } from "../models/Page";
+import DataService, { PREFIX } from "../services/DataService";
 import PageService from "../services/page";
 import { Action, PageData, PageState } from "../types/pageCtx";
 
@@ -57,6 +58,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(pageReducer, pageState);
     const [searchParams, setSearchParams] = useSearchParams();
     const pageService = new PageService();
+    const dataService = new DataService<Page>("pages");
 
     const notebookId = searchParams.get("notebookId") as string;
     const pageId = searchParams.get("page") as string;
@@ -64,13 +66,15 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     const getAllPages = useCallback(() => {
         if (!notebookId) return;
 
-        const allPages = pageService.getAllNotebookPage(notebookId);
+        const allPages =
+            (dataService.getAll(`${PREFIX.nb}${notebookId}`) as Page[]) || [];
         dispatch({ type: "setPageId", payload: pageId });
         dispatch({ type: "setPages", payload: allPages });
     }, [notebookId, pageId]);
 
     useEffect(() => {
         getAllPages();
+        // console.log();
     }, [getAllPages]);
 
     useEffect(() => {
@@ -92,7 +96,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     }, [state.pages, notebookId]);
 
     const createNotebookPage = (page: Page) => {
-        pageService.createPage(page);
+        dataService.create(page);
         setSearchParams({ notebookId, page: page.id });
         dispatch({ type: "createPage", payload: page });
         dispatch({ type: "setPageId", payload: page.id });
@@ -109,7 +113,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     };
 
     const updateNotebookPage = (notebookId: string, page: Page) => {
-        pageService.updateNotebookPageById(notebookId, page);
+        dataService.update(notebookId, page);
         dispatch({ type: "updatePage", payload: page });
     };
 

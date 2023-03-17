@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Note from "../models/Note";
+import DataService, { PREFIX } from "../services/DataService";
 import { NoteService } from "../services/note";
 import { Action, NoteData, NoteState } from "../types/noteCtx";
 
@@ -81,12 +82,15 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
     const urlSearchParams = new URLSearchParams(location.search);
 
     const noteService = new NoteService();
+    const dataService = new DataService<Note>("notes");
     const pageId = searchParams.get("page") as string;
     const noteId = searchParams.get("noteId") as string;
 
     const getAllPageNotes = useCallback(() => {
-        const allPageNotes = noteService.getAllPageNotes(pageId);
+        const allPageNotes =
+            (dataService.getAll(`${PREFIX.p}${pageId}`) as Note[]) || [];
         dispatch({ type: "setPageId", payload: pageId });
+
         if (noteId) {
             dispatch({ type: "setNoteId", payload: noteId });
             const foundNote = allPageNotes.find((note) => note.id === noteId);
@@ -103,7 +107,7 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
     }, [getAllPageNotes]);
 
     const createPageNote = (note: Note) => {
-        noteService.createNote(note);
+        dataService.create(note);
         dispatch({ type: "createNote", payload: note });
     };
 
@@ -127,7 +131,7 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
     };
 
     const updateNote = (pageId: string, note: Note) => {
-        noteService.updatePageNoteById(pageId, note);
+        dataService.update(pageId, note);
         dispatch({ type: "updateNote", payload: note });
         unSelectNote(note.id);
     };
