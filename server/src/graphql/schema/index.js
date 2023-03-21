@@ -6,9 +6,16 @@ const {
     resolvers: MutationResolvers,
 } = require("./Mutation");
 const { typeDefs: PageTypeDefs } = require("./Page");
+const { typeDefs: NoteTypeDefs } = require("./Notes");
 
 const schema = makeExecutableSchema({
-    typeDefs: [MutationDefs, NotebookDefs, QueryDefs, PageTypeDefs],
+    typeDefs: [
+        MutationDefs,
+        NotebookDefs,
+        QueryDefs,
+        PageTypeDefs,
+        NoteTypeDefs,
+    ],
     resolvers: { Query: QueryResolvers, Mutation: MutationResolvers },
 });
 

@@ -6,6 +6,7 @@ const typeDef = `
     type Query {
         notebooks(page: Int, limit: Int): PaginatedNotebook
         pages(notebookId: String!,page:Int, limit: Int): PaginatedPages
+        notes(pageId: String!, page: Int, limit: Int): PaginatedNotes
     }
 
     type PaginatedMeta {
