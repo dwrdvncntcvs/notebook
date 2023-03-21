@@ -1,5 +1,6 @@
 const nb = require("../../model/Notebook");
 const pg = require("../../model/Page");
+const { DataService } = require("../../service/dataService");
 
 const typeDef = `
     type Query {
@@ -19,11 +20,17 @@ const typeDef = `
     }
 `;
 
+const pageDataService = new DataService("page", pg.Page);
+const notebookDataService = new DataService("notebook", nb.Notebook);
+
 const resolvers = {
     notebooks: async (_, args) => {
         const { page, limit } = args;
         try {
-            const notebooks = await nb.findAll(page, limit);
+            const notebooks = await notebookDataService.findAll({
+                page,
+                limit,
+            });
             return notebooks;
         } catch (err) {
             return err;
@@ -32,7 +39,15 @@ const resolvers = {
     pages: async (_, args) => {
         const { page, limit, notebookId } = args;
         try {
-            const pages = await pg.findAll(notebookId, page, limit);
+            const pages = await pageDataService.findAll(
+                {
+                    page,
+                    limit,
+                },
+                {
+                    notebookId,
+                }
+            );
             return pages;
         } catch (err) {
             return err;

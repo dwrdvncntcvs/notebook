@@ -1,4 +1,5 @@
-const { create, remove, update } = require("../../model/Page");
+const { create, remove, update, Page } = require("../../model/Page");
+const { DataService } = require("../../service/dataService");
 
 const typeDefs = `
     type Page {
@@ -16,12 +17,14 @@ const typeDefs = `
     }
 `;
 
+const pageService = new DataService("page", Page);
+
 const resolvers = {
     createPage: async (_, args) => {
         const { name, notebookId } = args;
 
         try {
-            const createdPage = await create({ notebookId, name });
+            const createdPage = await pageService.create({ notebookId, name });
             return createdPage;
         } catch (err) {
             return err;

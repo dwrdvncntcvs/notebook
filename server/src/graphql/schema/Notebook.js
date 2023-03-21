@@ -1,4 +1,5 @@
-const { create, update, remove } = require("../../model/Notebook");
+const { create, update, remove, Notebook } = require("../../model/Notebook");
+const { DataService } = require("../../service/dataService");
 
 const typeDefs = `
     type Notebook {
@@ -10,16 +11,20 @@ const typeDefs = `
 
     type PaginatedNotebook {
         notebooks: [Notebook]
-        notebooksMeta: PaginatedMeta
+        notebookMeta: PaginatedMeta
     }
 `;
+
+const notebookDataService = new DataService("notebook", Notebook);
 
 const resolvers = {
     createNotebook: async (_, args) => {
         const { name } = args;
 
         try {
-            const createdNotebook = await create({ name });
+            const createdNotebook = await notebookDataService.create({
+                name,
+            });
             return createdNotebook;
         } catch (err) {
             return err;
