@@ -85,6 +85,46 @@ class DataService {
         }
     }
 
+    // This will update the data from the mongodb database
+    // ID: should be the specific id of the data saved in the database
+    // DATA: it is an object of data that you want to update on the database
+    // This will replace the existing value saved in the database
+    // To know the properties of this object please rely on the models created
+    async update(id, data) {
+        const dataToUpdate = {
+            ...data,
+            updatedAt: new Date(),
+        };
+
+        const name = `${this.name.charAt(0).toUpperCase()}${this.name.slice(
+            1,
+            this.name.length - 1
+        )}`;
+
+        if (!this.isValidId(id)) return new Error(`${name} doesn't exist`);
+
+        try {
+            const data = await this.findData(id);
+
+            if (!data) return new Error(`${name} doesn't exist`);
+
+            await this._dataModel.updateOne({ _id: id }, dataToUpdate, {
+                runValidators: true,
+            });
+
+            const updatedData = await this.findData(id);
+
+            return formatData(updatedData);
+        } catch (err) {
+            return errorHandler(err);
+        }
+    }
+
+    async findData(id) {
+        const data = await this._dataModel.findOne({ _id: id });
+        return data;
+    }
+
     isValidId(id) {
         return isValidObjectId(id);
     }

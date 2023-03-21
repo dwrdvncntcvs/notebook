@@ -34,7 +34,9 @@ const resolvers = {
         const { id, name } = args;
 
         try {
-            const updatedNotebook = await update(id, { name });
+            const updatedNotebook = await notebookDataService.update(id, {
+                name,
+            });
             return updatedNotebook;
         } catch (err) {
             return err;

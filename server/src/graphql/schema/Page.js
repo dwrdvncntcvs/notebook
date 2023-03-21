@@ -34,7 +34,7 @@ const resolvers = {
         const { id, name } = args;
 
         try {
-            const updatedPage = await update(id, { name });
+            const updatedPage = await pageService.update(id, { name });
             return updatedPage;
         } catch (err) {
             return err;
