@@ -8,6 +8,7 @@ const typeDefs = `
     }
 
     type PaginatedNotes {
+        id: String!
         notes: [Note]
         noteMeta: PaginatedMeta
     }

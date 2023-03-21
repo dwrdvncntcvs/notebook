@@ -1,5 +1,6 @@
 const nb = require("../../model/Notebook");
 const pg = require("../../model/Page");
+const n = require("../../model/Note");
 const { DataService } = require("../../service/dataService");
 
 const typeDef = `
@@ -23,6 +24,7 @@ const typeDef = `
 
 const pageDataService = new DataService("page", pg.Page);
 const notebookDataService = new DataService("notebook", nb.Notebook);
+const noteDataService = new DataService("note", n.Note);
 
 const resolvers = {
     notebooks: async (_, args) => {
@@ -50,6 +52,24 @@ const resolvers = {
                 }
             );
             return pages;
+        } catch (err) {
+            return err;
+        }
+    },
+    notes: async (_, args) => {
+        const { page, limit, pageId } = args;
+
+        try {
+            const notes = await noteDataService.findAll(
+                {
+                    page,
+                    limit,
+                },
+                {
+                    pageId,
+                }
+            );
+            return notes;
         } catch (err) {
             return err;
         }

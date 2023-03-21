@@ -22,18 +22,26 @@ class DataService {
     // Page Details
     // Parameter 1: { page: number, limit: number }
     // Page Filter
-    // Parameter 2: { notebookId }
+    // Parameter 2: { notebookId } || { pageId }
     async findAll(data, filter) {
         let filterId;
 
         if (filter?.hasOwnProperty("notebookId")) {
             if (!this.isValidId(filter.notebookId))
-                return new Error("Notebook doesn't exist");
+                return new Error("Page doesn't exist");
 
             if (!(await isNotebookExist(filter.notebookId)))
-                return new Error("Notebook doesn't exist");
+                return new Error("Page doesn't exist");
 
             filterId = filter.notebookId;
+        }
+
+        if (filter?.hasOwnProperty("pageId")) {
+            if (!this.isValidId(filter.pageId)) {
+                return new Error("Note doesn't exist");
+            }
+
+            filterId = filter.pageId;
         }
 
         const currentPage = (data.page - 1) * data.limit;
