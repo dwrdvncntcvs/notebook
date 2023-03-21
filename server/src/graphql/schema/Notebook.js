@@ -46,7 +46,7 @@ const resolvers = {
         const { id } = args;
 
         try {
-            const deletedMessage = await remove(id);
+            const deletedMessage = await notebookDataService.delete(id);
             return deletedMessage;
         } catch (err) {
             return err;

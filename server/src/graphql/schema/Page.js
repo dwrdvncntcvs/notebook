@@ -44,7 +44,7 @@ const resolvers = {
         const { id } = args;
 
         try {
-            const deleteMessage = await remove(id);
+            const deleteMessage = await pageService.delete(id);
             return deleteMessage;
         } catch (err) {
             return err;

@@ -11,6 +11,13 @@ class DataService {
         this.name = name;
     }
 
+    get uppercaseName() {
+        return `${this.name.charAt(0).toUpperCase()}${this.name.slice(
+            1,
+            this.name.length - 1
+        )}`;
+    }
+
     // Data values
     // Page Details
     // Parameter 1: { page: number, limit: number }
@@ -96,17 +103,13 @@ class DataService {
             updatedAt: new Date(),
         };
 
-        const name = `${this.name.charAt(0).toUpperCase()}${this.name.slice(
-            1,
-            this.name.length - 1
-        )}`;
-
-        if (!this.isValidId(id)) return new Error(`${name} doesn't exist`);
+        if (!this.isValidId(id))
+            return new Error(`${this.uppercaseName} doesn't exist`);
 
         try {
             const data = await this.findData(id);
 
-            if (!data) return new Error(`${name} doesn't exist`);
+            if (!data) return new Error(`${this.uppercaseName} doesn't exist`);
 
             await this._dataModel.updateOne({ _id: id }, dataToUpdate, {
                 runValidators: true,
@@ -117,6 +120,25 @@ class DataService {
             return formatData(updatedData);
         } catch (err) {
             return errorHandler(err);
+        }
+    }
+
+    async delete(id) {
+        if (!this.isValidId(id))
+            return new Error(`${this.uppercaseName} doesn't exist`);
+
+        try {
+            const data = await this.findData(id);
+
+            if (!data) return new Error(`${this.uppercaseName} doesn't exist`);
+
+            await this._dataModel.deleteOne({ _id: id });
+            return {
+                deleted: true,
+                message: `${this.uppercaseName} was deleted successfully`,
+            };
+        } catch (err) {
+            errorHandler(err);
         }
     }
 
