@@ -65,7 +65,6 @@ const NotebookContext = createContext<NotebookData>(notebookData);
 const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(notebookReducer, notebookState);
     const [searchParams, setSearchParams] = useSearchParams();
-    const notebookService = new NotebookService();
     const dataService = new DataService<Notebook>("notebooks");
 
     const notebookId = searchParams.get("notebookId") as string;
@@ -95,7 +94,7 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
     };
 
     const deleteNotebook = (id: string) => {
-        notebookService.delete(id);
+        dataService.delete(id);
         dispatch({ type: "deleteNotebook", payload: id });
     };
 

@@ -103,7 +103,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     };
 
     const deleteNotebookPageById = (notebookId: string, pageId: string) => {
-        pageService.deleteNotebookPageByPageId(notebookId, pageId);
+        dataService.delete(notebookId, pageId);
         dispatch({ type: "deletePage", payload: pageId });
     };
 

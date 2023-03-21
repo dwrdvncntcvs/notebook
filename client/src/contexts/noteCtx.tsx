@@ -80,9 +80,8 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const urlSearchParams = new URLSearchParams(location.search);
-
-    const noteService = new NoteService();
     const dataService = new DataService<Note>("notes");
+    
     const pageId = searchParams.get("page") as string;
     const noteId = searchParams.get("noteId") as string;
 
@@ -112,7 +111,7 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
     };
 
     const deletePageNote = (pageId: string, noteId: string) => {
-        noteService.deletePageNoteById(pageId, noteId);
+        dataService.delete(pageId, noteId);
         dispatch({ type: "deleteNote", payload: noteId });
     };
 

@@ -5,6 +5,7 @@ import { IPage, Page } from "../models/Page";
 export enum PREFIX {
     nb = "nb-",
     p = "p-",
+    n = "n-",
 }
 
 export default class DataService<T extends Note | Notebook | Page> {
@@ -43,7 +44,73 @@ export default class DataService<T extends Note | Notebook | Page> {
         } else this.updateNotebook(id, param);
     }
 
-    delete() {}
+    delete(param1: string): void;
+    delete(param1: string, param2: string): void;
+    delete(param1: string, param2?: string) {
+        if (!param2) {
+            this.deleteNotebook(param1);
+            return;
+        }
+
+        this.deletePageOrNote(param1, param2);
+    }
+
+    private deleteNotebook(notebookId: string) {
+        const notebooks = this.data as Notebook[];
+
+        const updatedNotebooks = notebooks.filter(
+            ({ id }) => id !== notebookId
+        );
+
+        this.deleteAllPages(notebookId);
+
+        localStorage.setItem(this.name, JSON.stringify(updatedNotebooks));
+    }
+
+    private deletePageOrNote(p_id: string, s_id: string) {
+        const itemObject = this.data as IPage | INote;
+        const itemValue = itemObject[p_id];
+
+        let filteredItems: Page[] | Note[];
+
+        if (this.name === "pages") {
+            this.deleteNoteByPageId(s_id);
+
+            filteredItems = (itemValue as Page[]).filter(
+                ({ id }) => id !== s_id
+            );
+        } else if (this.name === "notes") {
+            filteredItems = (itemValue as Note[]).filter(
+                ({ id }) => id !== s_id
+            );
+        }
+
+        if (filteredItems!.length < 1) {
+            delete itemObject[p_id];
+            return localStorage.setItem(this.name, JSON.stringify(itemObject));
+        }
+
+        itemObject[p_id] = filteredItems!;
+        localStorage.setItem(this.name, JSON.stringify(itemObject));
+    }
+
+    private deleteAllPages(notebookId: string) {
+        const pages = JSON.parse(localStorage.getItem("pages")!) as IPage;
+
+        for (let { id } of pages[notebookId]) this.deleteNoteByPageId(id);
+
+        delete pages[notebookId];
+
+        localStorage.setItem("pages", JSON.stringify(pages));
+    }
+
+    private deleteNoteByPageId(pageId: string) {
+        const notes = JSON.parse(localStorage.getItem("notes")!) as INote;
+
+        delete notes[pageId];
+
+        localStorage.setItem("notes", JSON.stringify(notes));
+    }
 
     private getAllNotebooks() {
         const data = this.data as Notebook[];
