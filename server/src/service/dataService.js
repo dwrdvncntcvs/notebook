@@ -14,7 +14,7 @@ class DataService {
     get uppercaseName() {
         return `${this.name.charAt(0).toUpperCase()}${this.name.slice(
             1,
-            this.name.length - 1
+            this.name.length
         )}`;
     }
 
