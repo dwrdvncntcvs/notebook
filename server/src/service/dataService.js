@@ -94,7 +94,7 @@ class DataService {
 
         try {
             const createdData = await this._dataModel.create(data);
-            return createdData;
+            return formatData(createdData);
         } catch (err) {
             return errorHandler(err);
         }
