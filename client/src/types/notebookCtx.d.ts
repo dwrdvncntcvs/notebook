@@ -1,4 +1,6 @@
+import { PageMeta } from "../graphql/type";
 import { Notebook } from "../models/Notebook";
+import { PageData } from "./pageCtx";
 
 interface NotebookData {
     notebooks: Notebook[];
@@ -7,11 +9,13 @@ interface NotebookData {
     selectNotebook: (id: string) => void;
     updateNotebook: (id: string, name: string) => void;
     notebookId: string;
+    notebookMeta: PageMeta;
 }
 
 interface NotebookState {
     notebooks: Notebook[];
     notebookId: string;
+    notebookMeta: PageMeta;
 }
 
 type Action =
@@ -34,6 +38,10 @@ type Action =
     | {
           type: "updateNotebook";
           payload: { id: string; name: string };
+      }
+    | {
+          type: "setPagination";
+          payload: PageMeta;
       };
 
 export { NotebookData, Action, NotebookState };

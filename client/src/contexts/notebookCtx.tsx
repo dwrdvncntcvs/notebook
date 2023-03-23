@@ -4,14 +4,21 @@ import {
     PropsWithChildren,
     useContext,
     useEffect,
-    useCallback,
     useReducer,
 } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Notebook } from "../models/Notebook";
 import DataService from "../services/DataService";
-import NotebookService from "../services/notebook";
 import { Action, NotebookData, NotebookState } from "../types/notebookCtx";
+import { useQuery } from "@apollo/client";
+import { GET_NOTEBOOKS } from "../graphql/notebooks";
+import { IGetNotebook, PageMeta } from "../graphql/type";
+
+const defaultNotebookMeta: PageMeta = {
+    count: 0,
+    page: 1,
+    totalPages: 0,
+};
 
 const notebookData: NotebookData = {
     notebooks: [],
@@ -20,11 +27,13 @@ const notebookData: NotebookData = {
     selectNotebook(id: string) {},
     updateNotebook(id: string, name: string) {},
     notebookId: "",
+    notebookMeta: defaultNotebookMeta,
 };
 
 const notebookState: NotebookState = {
     notebooks: [],
     notebookId: "",
+    notebookMeta: defaultNotebookMeta,
 };
 
 const notebookReducer = (state: NotebookState, action: Action) => {
@@ -45,7 +54,7 @@ const notebookReducer = (state: NotebookState, action: Action) => {
                     ({ id }) => id !== action.payload
                 ),
             };
-        case "updateNotebook": {
+        case "updateNotebook":
             return {
                 ...state,
                 notebooks: state.notebooks.map((notebook) =>
@@ -54,7 +63,11 @@ const notebookReducer = (state: NotebookState, action: Action) => {
                         : notebook
                 ),
             };
-        }
+        case "setPagination":
+            return {
+                ...state,
+                notebookMeta: action.payload,
+            };
         default:
             return state;
     }
@@ -63,20 +76,33 @@ const notebookReducer = (state: NotebookState, action: Action) => {
 const NotebookContext = createContext<NotebookData>(notebookData);
 
 const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
+    const { data, loading } = useQuery(GET_NOTEBOOKS, {
+        variables: {
+            page: 1,
+            limit: 5,
+        },
+    });
+
+    const notebooks_data = data?.notebooks as IGetNotebook;
+
     const [state, dispatch] = useReducer(notebookReducer, notebookState);
     const [searchParams, setSearchParams] = useSearchParams();
     const dataService = new DataService<Notebook>("notebooks");
 
     const notebookId = searchParams.get("notebookId") as string;
 
-    const getAllNotebooks = useCallback(() => {
-        const notebooks = dataService.getAll();
-        dispatch({ type: "setNotebooks", payload: notebooks });
-    }, []);
-
     useEffect(() => {
-        getAllNotebooks();
-    }, [getAllNotebooks]);
+        if (!loading) {
+            dispatch({
+                type: "setNotebooks",
+                payload: notebooks_data.notebooks,
+            });
+            dispatch({
+                type: "setPagination",
+                payload: notebooks_data.notebookMeta,
+            });
+        }
+    }, [notebooks_data, loading]);
 
     useEffect(() => {
         if (notebookId === "undefined" || !notebookId) {
