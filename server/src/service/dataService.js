@@ -56,7 +56,7 @@ class DataService {
             const totalPages = Math.ceil(totalDataCount / data.limit);
 
             const pageMeta = {
-                page: currentPage,
+                page: data.page,
                 count: totalDataCount,
                 totalPages,
             };
