@@ -16,4 +16,41 @@ const GET_NOTEBOOKS = gql`
     }
 `;
 
-export { GET_NOTEBOOKS };
+const CREATE_NOTEBOOK = gql`
+    mutation createNotebook($name: String) {
+        createNotebook(name: $name) {
+            ... on Notebook {
+                id
+                name
+                createdAt
+                updatedAt
+            }
+        }
+    }
+`;
+
+const UPDATE_NOTEBOOK = gql`
+    mutation updateNotebook($id: String!, $name: String) {
+        updateNotebook(id: $id, name: $name) {
+            ... on Notebook {
+                id
+                name
+                createdAt
+                updatedAt
+            }
+        }
+    }
+`;
+
+const DELETE_NOTEBOOK = gql`
+    mutation deleteNotebook($id: String) {
+        deleteNotebook(id: $id) {
+            ... on DeletedMessage {
+                deleted
+                message
+            }
+        }
+    }
+`;
+
+export { GET_NOTEBOOKS, CREATE_NOTEBOOK, UPDATE_NOTEBOOK, DELETE_NOTEBOOK };

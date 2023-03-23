@@ -10,8 +10,13 @@ import { useSearchParams } from "react-router-dom";
 import { Notebook } from "../models/Notebook";
 import DataService from "../services/DataService";
 import { Action, NotebookData, NotebookState } from "../types/notebookCtx";
-import { useQuery } from "@apollo/client";
-import { GET_NOTEBOOKS } from "../graphql/notebooks";
+import { useQuery, useMutation } from "@apollo/client";
+import {
+    CREATE_NOTEBOOK,
+    DELETE_NOTEBOOK,
+    GET_NOTEBOOKS,
+    UPDATE_NOTEBOOK,
+} from "../graphql/notebooks";
 import { IGetNotebook, PageMeta } from "../graphql/type";
 
 const defaultNotebookMeta: PageMeta = {
@@ -82,12 +87,15 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
             limit: 5,
         },
     });
-
+    
     const notebooks_data = data?.notebooks as IGetNotebook;
+
+    const [createNB] = useMutation(CREATE_NOTEBOOK);
+    const [updateNB] = useMutation(UPDATE_NOTEBOOK);
+    const [removeNB] = useMutation(DELETE_NOTEBOOK);
 
     const [state, dispatch] = useReducer(notebookReducer, notebookState);
     const [searchParams, setSearchParams] = useSearchParams();
-    const dataService = new DataService<Notebook>("notebooks");
 
     const notebookId = searchParams.get("notebookId") as string;
 
@@ -112,16 +120,34 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
         } else dispatch({ type: "setNotebookId", payload: notebookId });
     }, [notebookId]);
 
-    const createNotebook = (notebook: Notebook) => {
-        dataService.create(notebook);
-        dispatch({ type: "setNotebookId", payload: notebook.id });
-        dispatch({ type: "addNotebook", payload: notebook });
-        setSearchParams({ notebookId: notebook.id });
+    const createNotebook = async (notebook: Notebook) => {
+        try {
+            const { data } = await createNB({
+                variables: {
+                    name: notebook.name,
+                },
+            });
+
+            const createdNotebook = data.createNotebook as Notebook;
+
+            dispatch({
+                type: "setNotebookId",
+                payload: createdNotebook.id,
+            });
+            dispatch({ type: "addNotebook", payload: createdNotebook });
+            setSearchParams({ notebookId: createdNotebook.id });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
-    const deleteNotebook = (id: string) => {
-        dataService.delete(id);
-        dispatch({ type: "deleteNotebook", payload: id });
+    const deleteNotebook = async (id: string) => {
+        try {
+            await removeNB({ variables: { id } });
+            dispatch({ type: "deleteNotebook", payload: id });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const selectNotebook = (id: string) => {
@@ -129,9 +155,13 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
         setSearchParams({ notebookId: id });
     };
 
-    const updateNotebook = (id: string, name: string) => {
-        dataService.update(id, name);
-        dispatch({ type: "updateNotebook", payload: { id, name } });
+    const updateNotebook = async (id: string, name: string) => {
+        try {
+            const { data } = await updateNB({ variables: { id, name } });
+            dispatch({ type: "updateNotebook", payload: data });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
