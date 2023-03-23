@@ -36,7 +36,7 @@ const PageItemOption: FC<PageItemOptionProps> = ({ page }) => {
 
     const deleteNotebookPageHandler = (pageId: string) => () => {
         const prevPage = getDataPreviousValue<Page>(pageId, pages);
-        deleteNotebookPageById(notebookId, pageId);
+        deleteNotebookPageById(pageId);
 
         if (pages.length <= 1) {
             setSearchParams({ notebookId });

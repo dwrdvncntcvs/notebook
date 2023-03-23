@@ -1,16 +1,19 @@
+import { PageMeta } from "../graphql/type";
 import { Page } from "../models/Page";
 
 interface PageData {
     pages: Page[];
     createNotebookPage: (page: Page) => void;
     pageId: string;
-    deleteNotebookPageById: (notebookId: string, pageId: string) => void;
+    deleteNotebookPageById: (pageId: string) => void;
     selectPage: (pageId: string) => void;
-    updateNotebookPage: (notebookId: string, page: Page) => void;
+    updateNotebookPage: (page: Page) => void;
+    pageMeta: PageMeta;
 }
 interface PageState {
     pages: Page[];
     pageId: string;
+    pageMeta: PageMeta;
 }
 
 type Action =
@@ -33,6 +36,10 @@ type Action =
     | {
           type: "updatePage";
           payload: Page;
+      }
+    | {
+          type: "setPagination";
+          payload: PageMeta;
       };
 
 export { PageData, PageState, Action };

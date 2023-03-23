@@ -18,8 +18,6 @@ const PagesAside = () => {
         openModal(MODAL.CREATE_PAGE);
     };
 
-    console.log(notebooks.length);
-
     return (
         <aside className={notebooks.length === 0 ? scss.hidden : ""}>
             <div className={scss["aside-header"]}>

@@ -23,7 +23,7 @@ const UpdatePage = () => {
             name: pageName,
         };
 
-        updateNotebookPage(updateProps.notebookId, data);
+        updateNotebookPage(data);
         closeModal();
     };
 

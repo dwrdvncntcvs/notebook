@@ -3,28 +3,42 @@ import {
     FC,
     PropsWithChildren,
     useContext,
-    useCallback,
     useEffect,
     useReducer,
 } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Page } from "../models/Page";
-import DataService, { PREFIX } from "../services/DataService";
-import PageService from "../services/page";
+import DataService from "../services/DataService";
 import { Action, PageData, PageState } from "../types/pageCtx";
+import { useQuery, useMutation } from "@apollo/client";
+import {
+    CREATE_PAGE,
+    DELETE_PAGE,
+    GET_PAGES,
+    UPDATE_PAGE,
+} from "../graphql/pages";
+import { IGetPage, PageMeta } from "../graphql/type";
+
+const defaultPageMeta: PageMeta = {
+    count: 0,
+    page: 1,
+    totalPages: 1,
+};
 
 const pageData: PageData = {
     pages: [],
     createNotebookPage: (page: Page) => {},
     pageId: "",
-    deleteNotebookPageById: (notebookId: string, pageId: string) => {},
+    deleteNotebookPageById: (pageId: string) => {},
     selectPage: (pageId: string) => {},
-    updateNotebookPage: (notebookId: string, page: Page) => {},
+    updateNotebookPage: (page: Page) => {},
+    pageMeta: defaultPageMeta,
 };
 
-const pageState = {
+const pageState: PageState = {
     pages: [],
     pageId: "",
+    pageMeta: defaultPageMeta,
 };
 
 const pageReducer = (state: PageState, action: Action) => {
@@ -47,6 +61,11 @@ const pageReducer = (state: PageState, action: Action) => {
                     page.id === action.payload.id ? { ...action.payload } : page
                 ),
             };
+        case "setPagination":
+            return {
+                ...state,
+                pageMeta: action.payload,
+            };
         default:
             return state;
     }
@@ -57,25 +76,31 @@ const PageContext = createContext<PageData>(pageData);
 const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(pageReducer, pageState);
     const [searchParams, setSearchParams] = useSearchParams();
-    const pageService = new PageService();
-    const dataService = new DataService<Page>("pages");
+
+    const [createP] = useMutation(CREATE_PAGE);
+    const [updateP] = useMutation(UPDATE_PAGE);
+    const [deleteP] = useMutation(DELETE_PAGE);
 
     const notebookId = searchParams.get("notebookId") as string;
     const pageId = searchParams.get("page") as string;
 
-    const getAllPages = useCallback(() => {
-        if (!notebookId) return;
-
-        const allPages =
-            (dataService.getAll(`${PREFIX.nb}${notebookId}`) as Page[]) || [];
-        dispatch({ type: "setPageId", payload: pageId });
-        dispatch({ type: "setPages", payload: allPages });
-    }, [notebookId, pageId]);
+    const { data } = useQuery(GET_PAGES, {
+        skip: !notebookId,
+        variables: {
+            notebookId,
+            page: 1,
+            limit: 5,
+        },
+    });
 
     useEffect(() => {
-        getAllPages();
-        // console.log();
-    }, [getAllPages]);
+        if (data) {
+            const pagesData = data.pages as IGetPage;
+            dispatch({ type: "setPageId", payload: pageId });
+            dispatch({ type: "setPages", payload: pagesData.pages });
+            dispatch({ type: "setPagination", payload: pagesData.pageMeta });
+        }
+    }, [data]);
 
     useEffect(() => {
         const checkPages = () => {
@@ -93,18 +118,31 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         };
 
         checkPages();
-    }, [state.pages, notebookId]);
+    }, [state.pages, notebookId, pageId]);
 
-    const createNotebookPage = (page: Page) => {
-        dataService.create(page);
-        setSearchParams({ notebookId, page: page.id });
-        dispatch({ type: "createPage", payload: page });
-        dispatch({ type: "setPageId", payload: page.id });
+    const createNotebookPage = async (page: Page) => {
+        try {
+            const { data } = await createP({
+                variables: { notebookId, name: page.name },
+            });
+
+            const pageData = data.createPage as Page;
+
+            dispatch({ type: "createPage", payload: pageData });
+            dispatch({ type: "setPageId", payload: pageData.id });
+            setSearchParams({ notebookId, page: pageData.id });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
-    const deleteNotebookPageById = (notebookId: string, pageId: string) => {
-        dataService.delete(notebookId, pageId);
-        dispatch({ type: "deletePage", payload: pageId });
+    const deleteNotebookPageById = async (pageId: string) => {
+        try {
+            const data = await deleteP({ variables: { id: pageId } });
+            dispatch({ type: "deletePage", payload: pageId });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const selectPage = (pageId: string) => {
@@ -112,9 +150,20 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
         setSearchParams({ notebookId, page: pageId });
     };
 
-    const updateNotebookPage = (notebookId: string, page: Page) => {
-        dataService.update(notebookId, page);
-        dispatch({ type: "updatePage", payload: page });
+    const updateNotebookPage = async (page: Page) => {
+        try {
+            const { data } = await updateP({
+                variables: {
+                    id: page.id,
+                    name: page.name,
+                },
+            });
+
+            const updatePage = data.updatePage as Page;
+            dispatch({ type: "updatePage", payload: updatePage });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
