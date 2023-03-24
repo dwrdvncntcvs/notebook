@@ -33,7 +33,7 @@ const CreateNotes = () => {
 
     const updateHandler = () => {
         const noteToUpdate = { ...selectedNote, note, updatedAt: new Date() };
-        updateNote(pageId, noteToUpdate);
+        updateNote(noteToUpdate);
     };
 
     return (

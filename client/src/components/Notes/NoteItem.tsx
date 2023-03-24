@@ -18,7 +18,7 @@ interface NoteProps {
     note: Note;
 }
 
-const NoteItem: FC<NoteProps> = ({note}) => {
+const NoteItem: FC<NoteProps> = ({ note }) => {
     const { noteId, deletePageNote, selectNote, unSelectNote } =
         useNoteContext();
 
@@ -35,7 +35,7 @@ const NoteItem: FC<NoteProps> = ({note}) => {
             id: scss.delete,
             Icon: HiTrash,
             action: () => {
-                deletePageNote(note.pageId, note.id);
+                deletePageNote(note.id);
             },
             isSelected: noteId !== note.id,
         },

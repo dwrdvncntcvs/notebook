@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from "@apollo/client";
 import {
     createContext,
     FC,
@@ -8,10 +9,24 @@ import {
     useReducer,
 } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+    CREATE_NOTE,
+    DELETE_NOTE,
+    GET_NOTES,
+    UPDATE_NOTE,
+} from "../graphql/notes";
+import { IGetNote, PageMeta } from "../graphql/type";
 import Note from "../models/Note";
 import DataService, { PREFIX } from "../services/DataService";
 import { NoteService } from "../services/note";
 import { Action, NoteData, NoteState } from "../types/noteCtx";
+import { usePageContext } from "./pageCtx";
+
+const defaultNoteMeta: PageMeta = {
+    count: 0,
+    page: 1,
+    totalPages: 0,
+};
 
 const defaultNote: Note = {
     id: "",
@@ -27,10 +42,11 @@ const noteData: NoteData = {
     pageId: "",
     selectedNote: defaultNote,
     createPageNote: (note: Note) => {},
-    deletePageNote: (pageId: string, noteId: string) => {},
+    deletePageNote: (noteId: string) => {},
     selectNote: (note: Note) => {},
     unSelectNote: (noteId: string) => {},
-    updateNote: (pageId: string, note: Note) => {},
+    updateNote: (note: Note) => {},
+    noteMeta: defaultNoteMeta,
 };
 
 const noteReducer = (state: NoteState, action: Action) => {
@@ -70,49 +86,71 @@ const noteState: NoteState = {
     pageId: "",
     noteId: "",
     selectedNote: defaultNote,
+    noteMeta: defaultNoteMeta,
 };
 
 const NoteContext = createContext<NoteData>(noteData);
 
 const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(noteReducer, noteState);
-    const [searchParams] = useSearchParams();
     const location = useLocation();
     const navigate = useNavigate();
     const urlSearchParams = new URLSearchParams(location.search);
-    const dataService = new DataService<Note>("notes");
-    
-    const pageId = searchParams.get("page") as string;
-    const noteId = searchParams.get("noteId") as string;
+
+    const { pageId } = usePageContext();
+
+    const { data, refetch } = useQuery(GET_NOTES, {
+        skip: !pageId,
+        variables: {
+            pageId,
+            page: 1,
+            limit: 10,
+        },
+    });
+
+    const [createN] = useMutation(CREATE_NOTE);
+    const [updateN] = useMutation(UPDATE_NOTE);
+    const [deleteN] = useMutation(DELETE_NOTE);
 
     const getAllPageNotes = useCallback(() => {
-        const allPageNotes =
-            (dataService.getAll(`${PREFIX.p}${pageId}`) as Note[]) || [];
-        dispatch({ type: "setPageId", payload: pageId });
-
-        if (noteId) {
-            dispatch({ type: "setNoteId", payload: noteId });
-            const foundNote = allPageNotes.find((note) => note.id === noteId);
-
-            if (foundNote)
-                dispatch({ type: "setSelectedNote", payload: foundNote });
+        if (pageId) refetch();
+        if (!data || !pageId) {
+            dispatch({ type: "setNote", payload: [] });
+            dispatch({ type: "setPagination", payload: defaultNoteMeta });
+            return;
         }
 
-        dispatch({ type: "setNote", payload: allPageNotes });
-    }, [pageId, noteId]);
+        const notes = data?.notes as IGetNote;
+
+        dispatch({ type: "setNote", payload: notes.notes });
+        dispatch({ type: "setPagination", payload: notes.noteMeta });
+    }, [data, pageId]);
 
     useEffect(() => {
         getAllPageNotes();
     }, [getAllPageNotes]);
 
-    const createPageNote = (note: Note) => {
-        dataService.create(note);
-        dispatch({ type: "createNote", payload: note });
+    const createPageNote = async (n: Note) => {
+        try {
+            const response = await createN({
+                variables: { pageId, data: { note: n.note } },
+            });
+
+            const createdNote = response.data?.createNote as Note;
+
+            dispatch({ type: "createNote", payload: createdNote });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
-    const deletePageNote = (pageId: string, noteId: string) => {
-        dataService.delete(pageId, noteId);
-        dispatch({ type: "deleteNote", payload: noteId });
+    const deletePageNote = async (noteId: string) => {
+        try {
+            await deleteN({ variables: { id: noteId } });
+            dispatch({ type: "deleteNote", payload: noteId });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const selectNote = (note: Note) => {
@@ -129,10 +167,17 @@ const NoteProvider: FC<PropsWithChildren> = ({ children }) => {
         navigate({ search: `?${urlSearchParams.toString()}` });
     };
 
-    const updateNote = (pageId: string, note: Note) => {
-        dataService.update(pageId, note);
-        dispatch({ type: "updateNote", payload: note });
-        unSelectNote(note.id);
+    const updateNote = async (n: Note) => {
+        try {
+            await updateN({
+                variables: { noteId: n.id, data: { note: n.note } },
+            });
+
+            dispatch({ type: "updateNote", payload: n });
+            unSelectNote(n.id);
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (

@@ -100,7 +100,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
             dispatch({ type: "setPages", payload: pagesData.pages });
             dispatch({ type: "setPagination", payload: pagesData.pageMeta });
         }
-    }, [data]);
+    }, [data, pageId]);
 
     useEffect(() => {
         const checkPages = () => {
