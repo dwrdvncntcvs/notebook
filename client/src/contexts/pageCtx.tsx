@@ -8,7 +8,6 @@ import {
 } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Page } from "../models/Page";
-import DataService from "../services/DataService";
 import { Action, PageData, PageState } from "../types/pageCtx";
 import { useQuery, useMutation } from "@apollo/client";
 import {
@@ -84,7 +83,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     const notebookId = searchParams.get("notebookId") as string;
     const pageId = searchParams.get("page") as string;
 
-    const { data } = useQuery(GET_PAGES, {
+    const { data, refetch } = useQuery(GET_PAGES, {
         skip: !notebookId,
         variables: {
             notebookId,
@@ -95,6 +94,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
 
     useEffect(() => {
         if (data) {
+            if (notebookId) refetch();
             const pagesData = data.pages as IGetPage;
             dispatch({ type: "setPageId", payload: pageId });
             dispatch({ type: "setPages", payload: pagesData.pages });
@@ -109,12 +109,9 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
                 return;
             }
 
-            const firstPageId = state.pages[0].id;
+            const currentPage = state.pages.find((cp) => cp.id === pageId);
 
-            setSearchParams({
-                notebookId,
-                page: !state.pageId ? firstPageId : pageId,
-            });
+            selectPage(!currentPage ? state.pages[0].id : pageId);
         };
 
         checkPages();
