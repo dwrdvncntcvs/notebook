@@ -87,7 +87,7 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
             limit: 5,
         },
     });
-    
+
     const notebooks_data = data?.notebooks as IGetNotebook;
 
     const [createNB] = useMutation(CREATE_NOTEBOOK);
@@ -145,6 +145,7 @@ const NotebookProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             await removeNB({ variables: { id } });
             dispatch({ type: "deleteNotebook", payload: id });
+            setSearchParams({ notebookId: "undefined" });
         } catch (err) {
             console.log(err);
         }

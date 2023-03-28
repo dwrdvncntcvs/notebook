@@ -17,6 +17,7 @@ import {
     UPDATE_PAGE,
 } from "../graphql/pages";
 import { IGetPage, PageMeta } from "../graphql/type";
+import { useNotebookContext } from "./notebookCtx";
 
 const defaultPageMeta: PageMeta = {
     count: 0,
@@ -80,7 +81,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     const [updateP] = useMutation(UPDATE_PAGE);
     const [deleteP] = useMutation(DELETE_PAGE);
 
-    const notebookId = searchParams.get("notebookId") as string;
+    const { notebookId, notebooks } = useNotebookContext();
     const pageId = searchParams.get("page") as string;
 
     const { data, refetch } = useQuery(GET_PAGES, {
@@ -93,6 +94,10 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
     });
 
     useEffect(() => {
+        if (notebooks.length === 0) dispatch({ type: "setPages", payload: [] });
+    }, [notebooks]);
+
+    useEffect(() => {
         if (data) {
             if (notebookId) refetch();
             const pagesData = data.pages as IGetPage;
@@ -100,7 +105,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
             dispatch({ type: "setPages", payload: pagesData.pages });
             dispatch({ type: "setPagination", payload: pagesData.pageMeta });
         }
-    }, [data, pageId]);
+    }, [data]);
 
     useEffect(() => {
         const checkPages = () => {
@@ -111,7 +116,7 @@ const PageProvider: FC<PropsWithChildren> = ({ children }) => {
 
             const currentPage = state.pages.find((cp) => cp.id === pageId);
 
-            selectPage(!currentPage ? state.pages[0].id : pageId);
+            selectPage(!currentPage ? state.pages[0].id : currentPage.id);
         };
 
         checkPages();
