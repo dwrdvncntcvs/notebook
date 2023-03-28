@@ -3,6 +3,8 @@ const formatData = (dataObj) => {
     data["id"] = data._id.toString();
     delete data._id;
     delete data.__v;
+    data.createdAt = data.createdAt.toString();
+    data.updatedAt = data.updatedAt.toString();
 
     return data;
 };

@@ -49,7 +49,7 @@ class DataService {
         try {
             const dataResults = await this._dataModel
                 .find(filter)
-                .skip(data.currentPage)
+                .skip(currentPage)
                 .limit(data.limit);
 
             const totalDataCount = await this._dataModel.count();
